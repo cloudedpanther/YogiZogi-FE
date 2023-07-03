@@ -18,6 +18,7 @@ export const DraggableAccommodationList = ({
   data: IComparisonItem[];
 }) => {
   const navigate = useNavigate();
+  const [comparisonData, setComparisonData] = useState([...data]);
   const [selectedItemInfo, setSelectedItemInfo] = useState<
     IComparisonResponse[]
   >([]);
@@ -50,7 +51,7 @@ export const DraggableAccommodationList = ({
       const results = await Promise.all(promises);
       setSelectedItemInfo(results);
     };
-
+    setComparisonData([...data]);
     fetchDataForAllItems();
   }, [data]);
 
@@ -65,10 +66,19 @@ export const DraggableAccommodationList = ({
       )
         return;
 
-      const updatedData = Array.from(selectedItemInfo);
+      const updatedselectedItemInfo = Array.from(selectedItemInfo);
+      updatedselectedItemInfo.splice(source.index, 1);
+      updatedselectedItemInfo.splice(
+        destination.index,
+        0,
+        selectedItemInfo[source.index]
+      );
+      setSelectedItemInfo(updatedselectedItemInfo);
+
+      const updatedData = Array.from(comparisonData);
       updatedData.splice(source.index, 1);
-      updatedData.splice(destination.index, 0, selectedItemInfo[source.index]);
-      setSelectedItemInfo(updatedData);
+      updatedData.splice(destination.index, 0, comparisonData[source.index]);
+      setComparisonData(updatedData);
     },
     [selectedItemInfo, setSelectedItemInfo]
   );
@@ -134,7 +144,11 @@ export const DraggableAccommodationList = ({
                             <p className="truncate block font-semibold mr-1">
                               {el.accommodationName}
                             </p>
-                            <PriceComparisonChart data={data[idx]} />
+                            {comparisonData[idx] && (
+                              <PriceComparisonChart
+                                data={comparisonData[idx]}
+                              />
+                            )}
                             <p className="flex justify-center gap-1">
                               {addCommasToPrice(el.price)}원
                               {el.price === minPrice && (
