@@ -8,7 +8,7 @@ import {
 import { addCommasToPrice } from '../../../helpers';
 import { AlertModal } from '../../common/AlertModal';
 import { ComparisonModal } from './ComparisonModal';
-import { getSlashDateFormat } from '../../../utils/handleDate';
+import { getDateFormat, getSlashDateFormat } from '../../../utils/handleDate';
 import { IComparisonBoxProps, IComparisonItem } from './types';
 
 interface IComparisonBox {
@@ -26,17 +26,23 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
   const [selectedAcc, setSelectedAcc] = useRecoilState(selectedAccommodation);
 
   useEffect(() => {
+    const lastTimeStamp = localStorage.getItem('lastTimeStamp');
     const selectedRooms = localStorage.getItem('selectedRoom');
     const selectedAcc = localStorage.getItem('selectedAccommodation');
 
-    if (selectedRooms) {
-      const parsedData = JSON.parse(selectedRooms);
-      setSelectedRooms(parsedData);
-    }
+    if (
+      lastTimeStamp &&
+      JSON.parse(lastTimeStamp) === getDateFormat(new Date())
+    ) {
+      if (selectedRooms) {
+        const parsedData = JSON.parse(selectedRooms);
+        setSelectedRooms(parsedData);
+      }
 
-    if (selectedAcc) {
-      const parsedData = JSON.parse(selectedAcc);
-      setSelectedAcc(parsedData);
+      if (selectedAcc) {
+        const parsedData = JSON.parse(selectedAcc);
+        setSelectedAcc(parsedData);
+      }
     }
   }, []);
 
@@ -83,6 +89,7 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
 
   const saveComparisonData = () => {
     const handleBeforeUnload = () => {
+      localStorage.setItem('lastTimeStamp', JSON.stringify(getDateFormat(new Date())));
       localStorage.setItem('selectedRoom', JSON.stringify(selectedRooms));
       localStorage.setItem(
         'selectedAccommodation',
