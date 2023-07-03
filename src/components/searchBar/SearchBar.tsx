@@ -203,7 +203,7 @@ export const SearchBar = () => {
           </div>
           <p className="flex gap-3 items-center">
             <button
-              className="btn btn-square btn-xs bg-red-500 hover:bg-red-600 disabled:bg-red-700 text-white"
+              className="btn btn-square btn-xs border bg-white border-red-500 hover:bg-red-600 disabled:border-none disabled:text-white text-black"
               onClick={() => {
                 if (search.people === 0) return;
                 const peopleNum = search.people - 1;
@@ -215,7 +215,7 @@ export const SearchBar = () => {
             </button>
             {search.people}
             <button
-              className="btn btn-square btn-xs bg-red-500 hover:bg-red-600 disabled:bg-red-700 text-white"
+              className="btn btn-square btn-xs bg-white border border-red-500 hover:bg-red-600 hover:text-white disabled:border-none disabled:text-white text-black"
               onClick={() => {
                 const peopleNum = search.people + 1;
                 handleSearchState('people', peopleNum);
