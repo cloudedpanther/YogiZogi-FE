@@ -210,7 +210,7 @@ export const SearchBar = () => {
         </div>
         <div className="flex flex-col gap-2 sm:w-1/4">
           <div className="flex items-center font-semibold gap-1 text-lg">
-            <img src="./assets/icons/person.png" alt="person icon" /> 인원
+            <img src="./assets/icons/person.svg" alt="person icon" /> 인원
           </div>
           <p className="flex gap-3 items-center">
             <button
