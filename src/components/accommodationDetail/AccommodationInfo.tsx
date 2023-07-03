@@ -1,6 +1,5 @@
 import { IAccommodationDetailResponse } from '../../api/accommodationDetail';
 import RatingStars from '../../components/common/RatingStars';
-import { BiMap } from 'react-icons/bi';
 
 export const AccommodationInfo = ({
   accommodationData
@@ -16,7 +15,7 @@ export const AccommodationInfo = ({
           </h1>
           <div className="flex items-center gap-5 text-xs sm:text-sm md:text-base">
             <span className="flex items-center gap-2">
-              <BiMap />
+              <img src="./assets/icons/location.svg" alt="location icon" />
               {accommodationData.address}
             </span>
             <div className="flex items-center gap-1">

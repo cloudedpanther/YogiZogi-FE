@@ -1,4 +1,3 @@
-import { FiMapPin } from 'react-icons/fi';
 import RatingStars from '../common/RatingStars';
 import { ISearchResultContent } from 'api/search';
 import { BiShoppingBag } from 'react-icons/bi';
@@ -60,7 +59,7 @@ const AccommodationPreview = ({ data }: IAccommodationPreview) => {
           </button>
         </div>
         <div className="flex items-center gap-2 text-sm row-start-3 row-end-4 col-start-1 col-end-4">
-          <FiMapPin className="text-red-500 text-2xl shrink-0" />
+        <img src="./assets/icons/location.svg" alt="destination icon" className="text-red-500 text-2xl shrink-0"/>
           <p className="truncate">{address}</p>
         </div>
         <div className="row-start-3 row-end-4 col-start-4 col-end-6 flex items-center justify-end">

@@ -1,7 +1,3 @@
-import { BiMap } from 'react-icons/bi';
-import { FcCalendar } from 'react-icons/fc';
-import { BsPeople } from 'react-icons/bs';
-import { BsSearch } from 'react-icons/bs';
 import { useEffect, useRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -10,7 +6,6 @@ import { GetGeoInfo } from '../../utils/getGeoInfo';
 import { getDateFormat, getMonthDayFormat } from '../../utils/handleDate';
 import './SearchBar.css';
 import { useNavigate } from 'react-router-dom';
-import { BsPinMap } from 'react-icons/bs';
 import { AlertModal } from '../../components/common/AlertModal';
 
 export interface SearchProps {
@@ -123,7 +118,7 @@ export const SearchBar = () => {
     <section className="relative flex flex-col sm:flex-row gap-5 md:gap-10 border min-w-fit w-auto max-w-4xl p-3 shadow-md mx-auto rounded-lg bg-white">
       <div className="w-full md:w-1/2 flex flex-col gap-1">
         <p className="flex items-center gap-1 font-semibold text-lg">
-          <BsPinMap />
+          <img src="./assets/icons/location.svg" alt="destination icon" />
           목적지
         </p>
         <div className="flex items-center justify-between gap-1 shrink bg-slate-200 rounded-md p-1">
@@ -142,7 +137,9 @@ export const SearchBar = () => {
               }
             }}
           />
-          <BiMap
+          <img
+            src="./assets/icons/location.svg"
+            alt="location icon"
             className="cursor-pointer w-6 h-6"
             onClick={() => {
               GetGeoInfo(setSearch);
@@ -154,7 +151,7 @@ export const SearchBar = () => {
       <div className="w-full md:w-1/2 flex  justify-between">
         <div className="flex flex-col gap-2 w-1/2 sm:w-1/2">
           <div className="flex items-center font-semibold text-lg gap-1">
-            <FcCalendar />
+            <img src="./assets/icons/calendar.svg" alt="calendar icon" />
             <span>기간</span>
           </div>
           <p
@@ -213,11 +210,11 @@ export const SearchBar = () => {
         </div>
         <div className="flex flex-col gap-2 sm:w-1/4">
           <div className="flex items-center font-semibold gap-1 text-lg">
-            <BsPeople /> 인원
+            <img src="./assets/icons/person.png" alt="person icon" /> 인원
           </div>
           <p className="flex gap-3 items-center">
             <button
-              className="btn btn-square btn-xs"
+              className="btn btn-square btn-xs bg-red-500 hover:bg-red-600 disabled:bg-red-700 text-white"
               onClick={() => {
                 if (search.people === 0) return;
                 const peopleNum = search.people - 1;
@@ -229,7 +226,7 @@ export const SearchBar = () => {
             </button>
             {search.people}
             <button
-              className="btn btn-square btn-xs"
+              className="btn btn-square btn-xs bg-red-500 hover:bg-red-600 disabled:bg-red-700 text-white"
               onClick={() => {
                 const peopleNum = search.people + 1;
                 handleSearchState('people', peopleNum);
@@ -242,10 +239,10 @@ export const SearchBar = () => {
         </div>
         <div className="flex justify-end items-center w-auto sm:w-1/4">
           <button
-            className="btn font-semibold lg:w-full"
+            className="btn font-semibold lg:w-full bg-red-500 hover:bg-red-600"
             onClick={handleSearch}
           >
-            <BsSearch />
+            <img src="./assets/icons/search.svg" alt="search icon" />
             <span className="hidden lg:block text-lg">검색</span>
           </button>
         </div>
