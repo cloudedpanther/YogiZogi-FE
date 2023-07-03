@@ -20,7 +20,7 @@
 
 @media screen and (max-width: 640px) {
   .react-datepicker {
-    font-size: 11px !important;
+    font-size: 10px !important;
     width: min-content !important;
   }
 
