@@ -42,14 +42,19 @@ export const DraggableAccommodationList = ({
         checkOutDate: el.checkOutDate,
         people: el.people
       };
-    });
+    })
+    .catch(() => {});
   };
 
   useEffect(() => {
     const fetchDataForAllItems = async () => {
       const promises = data.map((el) => fetchDataForItem(el));
-      const results = await Promise.all(promises);
-      setSelectedItemInfo(results);
+      try {
+        const results = await Promise.all(promises);
+        setSelectedItemInfo(results);
+      } catch {
+        setSelectedItemInfo([]);
+      }
     };
     setComparisonData([...data]);
     fetchDataForAllItems();
