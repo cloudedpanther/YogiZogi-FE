@@ -1,3 +1,5 @@
+import { useRecoilState } from 'recoil';
+import { useState } from 'react';
 import RatingStars from '../common/RatingStars';
 import { ISearchResultContent } from 'api/search';
 import { selectedAccommodation } from '../../store/atom/comparisonAtom';
