@@ -32,8 +32,6 @@ export const SearchBar = () => {
   });
 
   const [dateContent, setDateContent] = useState('');
-  const [calendarState, setCalendarState] = useState(false);
-  const calendarRef = useRef<HTMLDivElement>(null);
   const [alertModalState, setAlertModalState] = useState(false);
   const [modalContent, setModalContent] = useState('');
 
@@ -57,23 +55,6 @@ export const SearchBar = () => {
       return { ...prev, [property]: value };
     });
   };
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (
-        calendarRef.current &&
-        !calendarRef.current.contains(e.target as Node)
-      ) {
-        setCalendarState(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
 
   const handleSearch = () => {
     const getDateGap =
@@ -154,58 +135,66 @@ export const SearchBar = () => {
             <img src="./assets/icons/calendar.svg" alt="calendar icon" />
             <span>기간</span>
           </div>
-          <p
+          <label
+            htmlFor="calendar"
             className="cursor-pointer"
-            onClick={() => setCalendarState(!calendarState)}
           >
-            {dateContent !== '' && !calendarState
+            {dateContent !== ''
               ? dateContent
               : '날짜 선택하기'}
-          </p>
-          <div
-            ref={calendarRef}
-            className={`flex px-2 md:px-3 pt-3 rounded-lg bg-white absolute gap-3 top-32 sm:top-9 sm:right-0 shadow-lg z-10 ${
-              calendarState ? 'block' : 'hidden'
-            }`}
-          >
-            <div>
-              <span className="text-xs font-semibold md:text-base">체크인</span>
-              <DatePicker
-                locale={ko}
-                inline
-                minDate={new Date(2023, 6, 1)}
-                maxDate={new Date(2023, 8, 30)}
-                selected={search.checkInDate}
-                closeOnScroll={true}
-                onChange={(date: Date) => {
-                  if (search.checkOutDate)
-                    handleSearchState('checkOutDate', new Date());
-                  handleSearchState('checkInDate', date);
-                }}
-              />
+          </label>
+          <input type="checkbox" id="calendar" className="modal-toggle" />
+          <div className="modal">
+            <div className="modal-box shadow-lg">
+              <div className="flex justify-center gap-3">
+                <div className="flex flex-col gap-2">
+                  <span className="font-semibold">체크인</span>
+                  <DatePicker
+                    locale={ko}
+                    inline
+                    minDate={new Date(2023, 6, 1)}
+                    maxDate={new Date(2023, 8, 30)}
+                    selected={search.checkInDate}
+                    closeOnScroll={true}
+                    onChange={(date: Date) => {
+                      if (search.checkOutDate)
+                        handleSearchState('checkOutDate', new Date());
+                      handleSearchState('checkInDate', date);
+                    }}
+                  />
+                </div>
+                <div className="flex flex-col gap-2">
+                  <span className="font-semibold">체크아웃</span>
+                  <DatePicker
+                    locale={ko}
+                    inline
+                    minDate={new Date(search.checkInDate.getTime() + 86400000)}
+                    maxDate={new Date(2023, 9, 1)}
+                    selected={search.checkOutDate}
+                    closeOnScroll={true}
+                    onChange={(date: Date) => {
+                      if (
+                        !search.checkInDate ||
+                        search.checkInDate.getTime() >= date.getTime()
+                      )
+                        return;
+                      handleSearchState('checkOutDate', date);
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="modal-action">
+                <label
+                  htmlFor="calendar"
+                  className="btn btn-sm bg-red-500 hover:bg-red-600 text-white"
+                >
+                  확인
+                </label>
+              </div>
             </div>
-            <div>
-              <span className="text-xs font-semibold md:text-base">
-                체크아웃
-              </span>
-              <DatePicker
-                locale={ko}
-                inline
-                minDate={new Date(search.checkInDate.getTime() + 86400000)}
-                maxDate={new Date(2023, 9, 1)}
-                selected={search.checkOutDate}
-                closeOnScroll={true}
-                onChange={(date: Date) => {
-                  if (
-                    !search.checkInDate ||
-                    search.checkInDate.getTime() >= date.getTime()
-                  )
-                    return;
-                  handleSearchState('checkOutDate', date);
-                  setCalendarState(!calendarState);
-                }}
-              />
-            </div>
+            <label className="modal-backdrop" htmlFor="calendar">
+              Close
+            </label>
           </div>
         </div>
         <div className="flex flex-col gap-2 sm:w-1/4">
