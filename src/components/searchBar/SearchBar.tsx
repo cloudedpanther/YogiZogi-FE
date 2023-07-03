@@ -192,7 +192,7 @@ export const SearchBar = () => {
                 locale={ko}
                 inline
                 minDate={new Date(search.checkInDate.getTime() + 86400000)}
-                maxDate={new Date(2023, 8, 30)}
+                maxDate={new Date(2023, 9, 1)}
                 selected={search.checkOutDate}
                 closeOnScroll={true}
                 onChange={(date: Date) => {
