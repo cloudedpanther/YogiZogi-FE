@@ -3,7 +3,7 @@ ChartJS.register(...registerables);
 import { Line } from 'react-chartjs-2';
 import { useEffect, useState } from 'react';
 import { fetchData } from '../../../api';
-import { IComparisonItem, IFetchDataForChart } from './Comparison';
+import { IComparisonItem, IFetchDataForChart } from './types';
 import { getDateFormat } from '../../../utils/handleDate';
 
 export const PriceComparisonChart = ({ data }: { data: IComparisonItem }) => {

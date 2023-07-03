@@ -8,7 +8,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { addCommasToPrice } from '../../../helpers';
 import RatingStars from '../../common/RatingStars';
 import { Link } from 'react-router-dom';
-import { IComparisonItem, IComparisonResponse } from './Comparison';
+import { IComparisonItem, IComparisonResponse } from './types';
 import { fetchData } from '../../../api';
 import { PriceComparisonChart } from './PriceComparisonChart';
 
@@ -20,11 +20,11 @@ export const DraggableAccommodationList = ({
   const [selectedItemInfo, setSelectedItemInfo] = useState<
     IComparisonResponse[]
   >([]);
-  
+
   const minPrice = Math.min(...selectedItemInfo.map((el) => el.price));
   const highRate = Math.max(...selectedItemInfo.map((el) => el.rate));
 
-  const hasConveniences = selectedItemInfo.some(el => el.convenience === '')
+  const hasConveniences = selectedItemInfo.some((el) => el.convenience === '');
 
   const fetchDataForItem = (el: any) => {
     const fetchUrl =

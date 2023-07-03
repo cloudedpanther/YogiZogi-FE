@@ -9,7 +9,7 @@ import { addCommasToPrice } from '../../../helpers';
 import { AlertModal } from '../../common/AlertModal';
 import { ComparisonModal } from './ComparisonModal';
 import { getSlashDateFormat } from '../../../utils/handleDate';
-import { IComparisonBoxProps, IComparisonItem } from './Comparison';
+import { IComparisonBoxProps, IComparisonItem } from './types';
 
 interface IComparisonBox {
   display: boolean;
