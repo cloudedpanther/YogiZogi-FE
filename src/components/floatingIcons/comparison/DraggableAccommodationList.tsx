@@ -95,7 +95,7 @@ export const DraggableAccommodationList = ({
           <ul
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className="flex gap-1 text-center w-full justify-center text-xs md:text-base"
+            className="flex gap-1 p-1 text-center w-full justify-center text-xs md:text-base"
           >
             {selectedItemInfo.length > 0 &&
               selectedItemInfo.map((el, idx) => {
@@ -114,9 +114,9 @@ export const DraggableAccommodationList = ({
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                           ref={provided.innerRef}
-                          className={`w-44 pb-1 rounded-lg list-none bg-white hover:shadow-lg ${
+                          className={`w-44 pb-1 rounded-lg list-none bg-white hover:shadow-lg border-[#1A1A3D] ${
                             snapshot.isDragging ? 'shadow-lg' : ''
-                          }`}
+                          } ${idx === 0 && 'border-2'}`}
                           style={{
                             ...provided.draggableProps.style,
                             top: snapshot.isDragging ? '4.3rem' : '3rem',
@@ -134,10 +134,10 @@ export const DraggableAccommodationList = ({
                         >
                           <div
                             key={idx}
-                            className="flex flex-col gap-y-1 text-center w-full p-1 text-xs md:text-base rounded-lg"
+                            className="flex flex-col gap-y-1 text-center w-full px-1 text-xs md:text-base rounded-lg"
                           >
                             <figure className="relative h-32 object-cover mx-1">
-                              <div className="absolute top-[-10px] left-16 badge bg-red-500 text-white font-bold">
+                              <div className="absolute top-[-10px] left-16 badge border border-gray-300 bg-white-500 font-bold">
                                 {' '}
                                 · · ·
                               </div>
