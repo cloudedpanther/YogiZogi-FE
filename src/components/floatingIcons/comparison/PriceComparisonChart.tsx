@@ -3,11 +3,12 @@ ChartJS.register(...registerables);
 import { Line } from 'react-chartjs-2';
 import { useEffect, useState } from 'react';
 import { fetchData } from '../../../api';
-import { IComparisonItem, IFetchDataForChart } from './Comparison';
+import { IComparisonItem, IFetchDataForChart } from './types';
 import { getDateFormat } from '../../../utils/handleDate';
 
 export const PriceComparisonChart = ({ data }: { data: IComparisonItem }) => {
   const [chartData, setChartData] = useState<IFetchDataForChart[]>([]);
+  const [chartState, setChartState] = useState(true);
   const checkInDate = data.checkInDate.split('-').pop();
   const checkOutDate = data.checkOutDate.split('-').pop();
 
@@ -39,20 +40,28 @@ export const PriceComparisonChart = ({ data }: { data: IComparisonItem }) => {
     });
 
     return fetchUrl.map((url) =>
-      fetchData.get(url).then((res: any) => {
-        return {
-          ...res.data.data
-        };
-      })
+      fetchData
+        .get(url)
+        .then((res: any) => {
+          return {
+            ...res.data.data
+          };
+        })
+        .catch((e) => console.log(e.message))
     );
   };
 
   useEffect(() => {
     const fetchDataForAllItems = async () => {
       const promises = fetchDataForItem();
-      const results = await Promise.all(promises);
-      setChartData(results);
+      await Promise.all(promises)
+        .then((results) => {
+          setChartState(true);
+          setChartData(results);
+        })
+        .catch(() => setChartState(false));
     };
+
     fetchDataForAllItems();
   }, [data]);
 
@@ -61,7 +70,7 @@ export const PriceComparisonChart = ({ data }: { data: IComparisonItem }) => {
     datasets: [
       {
         label: '3개월 가격추이',
-        data: chartData.map((el) => el.price),
+        data: chartData.map((el) => (el === undefined ? 0 : el.price)),
         backgroundColor: 'rgba(255, 99, 132, 0.5)',
         borderColor: 'rgba(255, 99, 132, 0.5)',
         borderWidth: 1
@@ -77,5 +86,15 @@ export const PriceComparisonChart = ({ data }: { data: IComparisonItem }) => {
     }
   };
 
-  return <Line data={datas} options={options} />;
+  return (
+    <>
+      {chartState ? (
+        <Line data={datas} options={options} />
+      ) : (
+        <div className="w-full h-20 flex items-center justify-center border rounded-xl">
+          no Data
+        </div>
+      )}
+    </>
+  );
 };

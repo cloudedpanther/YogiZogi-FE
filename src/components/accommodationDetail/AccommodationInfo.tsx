@@ -26,8 +26,9 @@ export const AccommodationInfo = ({
             {accommodationData.info && (
               <>
                 <details open className="p-3 rounded-lg bg-base-100 shadow-lg">
-                  <summary className="text-base md:text-lg font-semibold cursor-pointer">
-                    기본정보
+                  <summary className="flex items-center gap-1 text-base md:text-lg font-semibold cursor-pointer">
+                    <span className="inline-block w-1 h-5 bg-red-500 rounded-md"></span>
+                    <p>기본정보</p>
                   </summary>
                   {accommodationData.info && (
                     <div
@@ -45,8 +46,9 @@ export const AccommodationInfo = ({
                   '<!-- 편의시설 및 서비스 -->'
                 ) && (
                   <details className="p-3 rounded-lg bg-base-100 shadow-lg">
-                    <summary className="text-base md:text-lg font-semibold cursor-pointer">
-                      편의시설 및 서비스
+                    <summary className="flex items-center gap-1 text-base md:text-lg font-semibold cursor-pointer">
+                      <span className="inline-block w-1 h-5 bg-red-500 rounded-md"></span>
+                      <p>편의시설 및 서비스</p>
                     </summary>
                     <div
                       dangerouslySetInnerHTML={{
@@ -59,8 +61,9 @@ export const AccommodationInfo = ({
                   </details>
                 )}
                 <details className="p-3 rounded-lg bg-base-100 shadow-lg">
-                  <summary className="text-base md:text-lg font-semibold cursor-pointer">
-                    판매자 정보
+                  <summary className="flex items-center gap-1 text-base md:text-lg font-semibold cursor-pointer">
+                    <span className="inline-block w-1 h-5 bg-red-500 rounded-md"></span>
+                    <p>판매자 정보</p>
                   </summary>
                   <div
                     dangerouslySetInnerHTML={{

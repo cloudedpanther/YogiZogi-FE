@@ -2,22 +2,19 @@ import LocalMapView from '../components/map/LocalMapView';
 import { useEffect, useState } from 'react';
 import { fetchData } from '../api';
 import {
-  CarouselModal,
-  IModalProps
-} from '../components/accommodationDetail/CarouselModal';
-import {
   AccommodationDetailInitData,
   IAccommodationDetailResponse,
   IReservationConfirm,
-  IReview,
-  IReviewResponse,
-  IReviewResponseContentInitData,
   IRoomResponse
 } from '../api/accommodationDetail';
-import './AccommodationDetail.css';
+import {
+  CarouselModal,
+  IModalProps
+} from '../components/accommodationDetail/CarouselModal';
 import { RoomInfo } from '../components/accommodationDetail/RoomInfo';
-import { ReviewSection } from '../components/accommodationDetail/ReviewSection';
+import { Review } from '../components/accommodationDetail/Review';
 import { AccommodationInfo } from '../components/accommodationDetail/AccommodationInfo';
+import './AccommodationDetail.css';
 import { FloatingIcon } from '../components/floatingIcons/FloatingIcon';
 
 const AccommodationDetail = () => {
@@ -25,13 +22,6 @@ const AccommodationDetail = () => {
     useState<IAccommodationDetailResponse>(AccommodationDetailInitData);
 
   const [page, setPage] = useState(0);
-
-  const [reviewRes, setReviewRes] = useState<IReviewResponse>({
-    content: [IReviewResponseContentInitData],
-    totalElements: 0,
-    totalPages: 0
-  });
-  const [reviewArr, setReviewArr] = useState<IReview[]>([]);
 
   const [modalProps, setModalProps] = useState<IModalProps>({
     imgList: [],
@@ -54,9 +44,9 @@ const AccommodationDetail = () => {
 
   const [roomData, setRoomData] = useState<IReservationConfirm>({
     accommodationName: '',
-    accommodationId: id,
-    roomName: '',
+    accommodationId: '',
     roomId: '',
+    roomName: '',
     address: '',
     rate: 0,
     checkInDate: checkInDate,
@@ -65,23 +55,6 @@ const AccommodationDetail = () => {
     price: '',
     imgUrl: ''
   });
-
-  const getReview = async (page: number) => {
-    fetchData
-      .get(`/accommodation/${id}/review?page=${page}&pagesize=5`)
-      .then((reviewRes: any) => {
-        setReviewRes({
-          content: reviewRes.data.content || IReviewResponseContentInitData,
-          totalElements: reviewRes.data.totalElements || 0,
-          totalPages: reviewRes.data.totalPages || 0
-        });
-        setReviewArr((prev) => {
-          const newReviewArr: IReview[] = [...prev];
-          newReviewArr[page] = reviewRes.data.content;
-          return newReviewArr;
-        });
-      });
-  };
 
   useEffect(() => {
     fetchData
@@ -101,16 +74,10 @@ const AccommodationDetail = () => {
           people,
           address
         }));
-      });
-
-    getReview(page);
+      })
+      .catch((e) => console.log(`데이터를 받아오지 못했습니다.`));
   }, []);
 
-  useEffect(() => {
-    (async () => {
-      if (!reviewArr[page]) getReview(page);
-    })();
-  }, [page]);
 
   return (
     <div className="flex flex-col gap-10 lg:pt-10 max-w-5xl mx-auto mb-20 p-5 lg:px-0">
@@ -210,12 +177,11 @@ const AccommodationDetail = () => {
           </div>
         </div>
         <div className="divider" />
-        <ReviewSection
+        <Review
+          id={id}
           accommodationData={accommodationData}
           page={page}
           setPage={setPage}
-          reviewArr={reviewArr}
-          reviewRes={reviewRes}
         />
       </section>
       <FloatingIcon />

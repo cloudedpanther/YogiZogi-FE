@@ -7,8 +7,8 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import { addCommasToPrice } from '../../../helpers';
 import RatingStars from '../../common/RatingStars';
-import { Link } from 'react-router-dom';
-import { IComparisonItem, IComparisonResponse } from './Comparison';
+import { useNavigate } from 'react-router-dom';
+import { IComparisonItem, IComparisonResponse } from './types';
 import { fetchData } from '../../../api';
 import { PriceComparisonChart } from './PriceComparisonChart';
 
@@ -17,14 +17,16 @@ export const DraggableAccommodationList = ({
 }: {
   data: IComparisonItem[];
 }) => {
+  const navigate = useNavigate();
+  const [comparisonData, setComparisonData] = useState([...data]);
   const [selectedItemInfo, setSelectedItemInfo] = useState<
     IComparisonResponse[]
   >([]);
-  
+
   const minPrice = Math.min(...selectedItemInfo.map((el) => el.price));
   const highRate = Math.max(...selectedItemInfo.map((el) => el.rate));
 
-  const hasConveniences = selectedItemInfo.some(el => el.convenience === '')
+  const hasConveniences = selectedItemInfo.some((el) => el.convenience === '');
 
   const fetchDataForItem = (el: any) => {
     const fetchUrl =
@@ -32,15 +34,18 @@ export const DraggableAccommodationList = ({
         ? `/accommodation/compare/accommodation?accommodationid=${el.accommodationId}&checkindate=${el.checkInDate}&checkoutdate=${el.checkOutDate}&people=${el.people}`
         : `/accommodation/compare/room?roomid=${el.roomId}&checkindate=${el.checkInDate}&checkoutdate=${el.checkOutDate}&people=${el.people}`;
 
-    return fetchData.get(fetchUrl).then((res: any) => {
-      return {
-        ...res.data.data,
-        accommodationId: el.accommodationId,
-        checkInDate: el.checkInDate,
-        checkOutDate: el.checkOutDate,
-        people: el.people
-      };
-    });
+    return fetchData
+      .get(fetchUrl)
+      .then((res: any) => {
+        return {
+          ...res.data.data,
+          accommodationId: el.accommodationId,
+          checkInDate: el.checkInDate,
+          checkOutDate: el.checkOutDate,
+          people: el.people
+        };
+      })
+      .catch((e) => console.log(e.message));
   };
 
   useEffect(() => {
@@ -49,6 +54,8 @@ export const DraggableAccommodationList = ({
       const results = await Promise.all(promises);
       setSelectedItemInfo(results);
     };
+
+    setComparisonData([...data]);
 
     fetchDataForAllItems();
   }, [data]);
@@ -64,10 +71,19 @@ export const DraggableAccommodationList = ({
       )
         return;
 
-      const updatedData = Array.from(selectedItemInfo);
+      const updatedselectedItemInfo = Array.from(selectedItemInfo);
+      updatedselectedItemInfo.splice(source.index, 1);
+      updatedselectedItemInfo.splice(
+        destination.index,
+        0,
+        selectedItemInfo[source.index]
+      );
+      setSelectedItemInfo(updatedselectedItemInfo);
+
+      const updatedData = Array.from(comparisonData);
       updatedData.splice(source.index, 1);
-      updatedData.splice(destination.index, 0, selectedItemInfo[source.index]);
-      setSelectedItemInfo(updatedData);
+      updatedData.splice(destination.index, 0, comparisonData[source.index]);
+      setComparisonData(updatedData);
     },
     [selectedItemInfo, setSelectedItemInfo]
   );
@@ -79,7 +95,7 @@ export const DraggableAccommodationList = ({
           <ul
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className="flex gap-1 text-center w-full justify-center text-xs md:text-base"
+            className="flex gap-1 p-1 text-center w-full justify-center text-xs md:text-base"
           >
             {selectedItemInfo.length > 0 &&
               selectedItemInfo.map((el, idx) => {
@@ -91,16 +107,13 @@ export const DraggableAccommodationList = ({
                   >
                     {(provided, snapshot) => (
                       <>
-                        {idx === 1 && data.length === 3 && (
-                          <div className="divider w-1 h-full m-0 bg-gray-300"></div>
-                        )}
                         <li
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                           ref={provided.innerRef}
-                          className={`w-44 pb-1 rounded-lg list-none bg-white hover:shadow-lg ${
+                          className={`w-44 pb-1 rounded-lg list-none bg-white hover:shadow-lg border-[#1A1A3D] ${
                             snapshot.isDragging ? 'shadow-lg' : ''
-                          }`}
+                          } ${idx === 0 && 'border-2'}`}
                           style={{
                             ...provided.draggableProps.style,
                             top: snapshot.isDragging ? '4.3rem' : '3rem',
@@ -118,7 +131,7 @@ export const DraggableAccommodationList = ({
                         >
                           <div
                             key={idx}
-                            className="flex flex-col gap-y-1 text-center w-full p-1 text-xs md:text-base rounded-lg"
+                            className="flex flex-col gap-y-1 text-center w-full px-1 text-xs md:text-base rounded-lg"
                           >
                             <figure className="relative h-32 object-cover mx-1">
                               <div className="absolute top-[-10px] left-16 badge bg-red-500 text-white font-bold">
@@ -133,7 +146,14 @@ export const DraggableAccommodationList = ({
                             <p className="truncate block font-semibold mr-1">
                               {el.accommodationName}
                             </p>
-                            <PriceComparisonChart data={data[idx]} />
+                            {el.roomName && (
+                              <p className="truncate">{el.roomName}</p>
+                            )}
+                            {comparisonData[idx] && (
+                              <PriceComparisonChart
+                                data={comparisonData[idx]}
+                              />
+                            )}
                             <p className="flex justify-center gap-1">
                               {addCommasToPrice(el.price)}원
                               {el.price === minPrice && (
@@ -169,13 +189,17 @@ export const DraggableAccommodationList = ({
                                 <div className="text-xs">{el.convenience}</div>
                               </details>
                             )}
-                            <Link
-                              to={`/accommodation/${el.accommodationId}?&checkindate=${el.checkInDate}&checkoutdate=${el.checkOutDate}&people=${el.people}`}
+                            <button
+                              onClick={() => {
+                                navigate(
+                                  `/accommodation/${el.accommodationId}?checkindate=${el.checkInDate}&checkoutdate=${el.checkOutDate}&people=${el.people}`
+                                );
+                                location.reload();
+                              }}
+                              className="btn mx-auto mt-2  btn-sm text-xs md:text-base font-normal border-red-500 bg-white"
                             >
-                              <button className="btn mx-auto mt-2  btn-sm text-xs md:text-base font-normal border-red-500 bg-white">
-                                바로가기
-                              </button>
-                            </Link>
+                              바로가기
+                            </button>
                           </div>
                         </li>
                       </>
