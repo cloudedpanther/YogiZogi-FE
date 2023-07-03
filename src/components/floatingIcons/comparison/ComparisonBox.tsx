@@ -1,6 +1,6 @@
 import { SetterOrUpdater, useRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   selectedAccommodation,
   selectedRoom
@@ -9,7 +9,7 @@ import { addCommasToPrice } from '../../../helpers';
 import { AlertModal } from '../../common/AlertModal';
 import { ComparisonModal } from './ComparisonModal';
 import { getSlashDateFormat } from '../../../utils/handleDate';
-import { IComparisonBoxProps, IComparisonItem } from './Comparison';
+import { IComparisonBoxProps, IComparisonItem } from './types';
 
 interface IComparisonBox {
   display: boolean;
@@ -22,13 +22,28 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
   const [alertModalState, setAlertModalState] = useState(false);
   const [comparisonModalState, setComparisonModalState] = useState(false);
   const [comparisonItems, setComparisonItems] = useState<IComparisonItem[]>([]);
+  const [selectedRooms, setSelectedRooms] = useRecoilState(selectedRoom);
+  const [selectedAcc, setSelectedAcc] = useRecoilState(selectedAccommodation);
+
+  useEffect(() => {
+    const selectedRooms = localStorage.getItem('selectedRoom');
+      const selectedAcc = localStorage.getItem('selectedAccommodation');
+
+      if (selectedRooms) {
+        const parsedData = JSON.parse(selectedRooms);
+        setSelectedRooms(parsedData);
+      }
+
+      if (selectedAcc) {
+        const parsedData = JSON.parse(selectedAcc);
+        setSelectedAcc(parsedData);
+      }
+  }, []);
 
   if (source === 'room') {
-    const [selectedRooms, setSelectedRooms] = useRecoilState(selectedRoom);
     data = selectedRooms;
     setData = setSelectedRooms;
   } else {
-    const [selectedAcc, setSelectedAcc] = useRecoilState(selectedAccommodation);
     data = selectedAcc;
     setData = setSelectedAcc;
   }
@@ -65,6 +80,24 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
     const newItems = data.filter((_, i) => i !== idx);
     setData(newItems);
   };
+
+  const saveComparisonData = () => {
+    const handleBeforeUnload = () => {
+      localStorage.setItem('selectedRoom', JSON.stringify(selectedRooms));
+      localStorage.setItem(
+        'selectedAccommodation',
+        JSON.stringify(selectedAcc)
+      );
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  };
+
+  saveComparisonData();
 
   return (
     <article

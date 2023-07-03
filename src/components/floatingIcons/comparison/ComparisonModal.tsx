@@ -1,4 +1,4 @@
-import { IComparisonItem } from './Comparison';
+import { IComparisonItem } from './types';
 import { DraggableAccommodationList } from './DraggableAccommodationList';
 
 interface IComparisonModal {
