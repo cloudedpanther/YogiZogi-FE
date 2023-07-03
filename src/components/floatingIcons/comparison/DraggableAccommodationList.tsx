@@ -7,8 +7,8 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import { addCommasToPrice } from '../../../helpers';
 import RatingStars from '../../common/RatingStars';
-import { Link } from 'react-router-dom';
-import { IComparisonItem, IComparisonResponse } from './Comparison';
+import { useNavigate } from 'react-router-dom';
+import { IComparisonItem, IComparisonResponse } from './types';
 import { fetchData } from '../../../api';
 import { PriceComparisonChart } from './PriceComparisonChart';
 
@@ -17,6 +17,7 @@ export const DraggableAccommodationList = ({
 }: {
   data: IComparisonItem[];
 }) => {
+  const navigate = useNavigate();
   const [selectedItemInfo, setSelectedItemInfo] = useState<
     IComparisonResponse[]
   >([]);
@@ -169,13 +170,17 @@ export const DraggableAccommodationList = ({
                                 <div className="text-xs">{el.convenience}</div>
                               </details>
                             )}
-                            <Link
-                              to={`/accommodation/${el.accommodationId}?&checkindate=${el.checkInDate}&checkoutdate=${el.checkOutDate}&people=${el.people}`}
+                            <button
+                              onClick={() => {
+                                navigate(
+                                  `/accommodation/${el.accommodationId}?checkindate=${el.checkInDate}&checkoutdate=${el.checkOutDate}&people=${el.people}`
+                                );
+                                location.reload();
+                              }}
+                              className="btn mx-auto mt-2  btn-sm text-xs md:text-base font-normal border-red-500 bg-white"
                             >
-                              <button className="btn mx-auto mt-2  btn-sm text-xs md:text-base font-normal border-red-500 bg-white">
-                                바로가기
-                              </button>
-                            </Link>
+                              바로가기
+                            </button>
                           </div>
                         </li>
                       </>
