@@ -6,7 +6,7 @@ import { IModalProps } from './CarouselModal';
 import { useRecoilState } from 'recoil';
 import { selectedRoom } from '../../store/atom/comparisonAtom';
 import { AlertModal } from '../../components/common/AlertModal';
-import { IComparisonBoxProps } from 'components/floatingIcons/comparison/Comparison';
+import { IComparisonBoxProps } from 'components/floatingIcons/comparison/types';
 
 interface IRoomInfo {
   roomInfo: IRoomResponse[];
