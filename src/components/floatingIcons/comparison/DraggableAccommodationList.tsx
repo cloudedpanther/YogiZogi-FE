@@ -141,8 +141,14 @@ export const DraggableAccommodationList = ({
                             <p className="truncate block font-semibold mr-1">
                               {el.accommodationName}
                             </p>
-                            {el.roomName && <p className='truncate'>{el.roomName}</p>}
-                            <PriceComparisonChart data={comparisonData[idx]} />
+                            {el.roomName && (
+                              <p className="truncate">{el.roomName}</p>
+                            )}
+                            {comparisonData[idx] && (
+                              <PriceComparisonChart
+                                data={comparisonData[idx]}
+                              />
+                            )}
                             <p className="flex justify-center gap-1">
                               {addCommasToPrice(el.price)}원
                               {el.price === minPrice && (
