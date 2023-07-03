@@ -1,12 +1,11 @@
-import { FiMapPin } from 'react-icons/fi';
+import { useRecoilState } from 'recoil';
+import { useState } from 'react';
 import RatingStars from '../common/RatingStars';
 import { ISearchResultContent } from 'api/search';
-import { BiShoppingBag } from 'react-icons/bi';
-import { useRecoilState } from 'recoil';
 import { selectedAccommodation } from '../../store/atom/comparisonAtom';
-import { useState } from 'react';
 import { AlertModal } from '../../components/common/AlertModal';
 import { addCommasToPrice } from '../../helpers';
+import { IComparisonBoxProps } from 'components/floatingIcons/comparison/Comparison';
 
 interface IAccommodationPreview {
   data: ISearchResultContent;
@@ -14,7 +13,7 @@ interface IAccommodationPreview {
 
 const AccommodationPreview = ({ data }: IAccommodationPreview) => {
   const { accommodationName, rate, picUrl, address, price } = data;
-  const [comparisonItems, setComparisonItems] = useRecoilState(
+  const [comparisonItems, setComparisonItems] = useRecoilState<IComparisonBoxProps[]>(
     selectedAccommodation
   );
   const [alertModalState, setAlertModalState] = useState(false);
@@ -30,7 +29,16 @@ const AccommodationPreview = ({ data }: IAccommodationPreview) => {
       )
     )
       setAlertModalState(true);
-    else setComparisonItems((prev) => [...prev, data]);
+    else {
+      const comparisonData = {
+        accommodationName: data.accommodationName,
+        accommodationId: data.id.toString(),
+        roomId: 0,
+        price: data.price,
+        imgUrl: data.picUrl,
+      };
+      setComparisonItems((prev) => [...prev, comparisonData]);
+    }
   };
 
   return (
@@ -50,17 +58,17 @@ const AccommodationPreview = ({ data }: IAccommodationPreview) => {
             {accommodationName}
           </p>
         </div>
-        <div className="flex items-center gap-2 row-start-2 row-end-3 col-start-1 col-end-6 text-lg font-bold text-right">
+        <div className="flex items-center gap-2 row-start-2 row-end-3 col-start-1 col-end-6 text-lg font-bold">
           <p>{`${addCommasToPrice(price)}원`}</p>
           <button
             onClick={(e) => addComparisonCart(e)}
-            className="btn btn-sm btn-circle btn-success"
+            className="btn btn-sm border-red-500 bg-white"
           >
-            <BiShoppingBag className="w-5 h-5" />
+            비교함에 담기
           </button>
         </div>
         <div className="flex items-center gap-2 text-sm row-start-3 row-end-4 col-start-1 col-end-4">
-          <FiMapPin className="text-red-500 text-2xl shrink-0" />
+        <img src="./assets/icons/location.svg" alt="destination icon" className="text-red-500 text-2xl shrink-0"/>
           <p className="truncate">{address}</p>
         </div>
         <div className="row-start-3 row-end-4 col-start-4 col-end-6 flex items-center justify-end">

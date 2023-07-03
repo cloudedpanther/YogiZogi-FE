@@ -83,9 +83,57 @@ const Range = ({ width, steps, onRangeValueChange }: IRange) => {
     }
   }, []);
 
+  const handleTouchMove = useCallback((e: TouchEvent) => {
+    const { slider, targetThumb, thumbs } = getDOMs();
+
+    if (!slider || !targetThumb) return;
+
+    document.addEventListener;
+    let newLeft = Math.floor(
+      e.touches[0].clientX - slider?.getBoundingClientRect().left
+    );
+
+    if (newLeft < 0) {
+      newLeft = 0;
+    }
+
+    let rightEdge = slider.offsetWidth - targetThumb.offsetWidth;
+    if (newLeft > rightEdge) {
+      newLeft = rightEdge;
+    }
+
+    if (newLeft % STEP_WIDTH === 0) {
+      targetThumb.style.left = `${newLeft}px`;
+
+      const rangeValues = Array.from(thumbs).map((thumb) => {
+        const stringValue = thumb.style.left;
+
+        if (stringValue === '') return 0;
+
+        return parseInt(stringValue.split('px')[0]);
+      });
+
+      const min = Math.min(...rangeValues);
+      const max = Math.max(...rangeValues);
+
+      handleRangeValueChange(min, max);
+    }
+  }, []);
+
   const handleMouseUp = useCallback(() => {
     document.removeEventListener('mousemove', handleMouseMove);
     document.removeEventListener('mouseup', handleMouseUp);
+
+    const { slider, targetThumb } = getDOMs();
+
+    if (!slider || !targetThumb) return;
+
+    targetThumb.classList.remove('thumbMoving');
+  }, []);
+
+  const handleTouchEnd = useCallback(() => {
+    document.removeEventListener('touchmove', handleTouchMove);
+    document.removeEventListener('touchend', handleTouchEnd);
 
     const { slider, targetThumb } = getDOMs();
 
@@ -112,6 +160,25 @@ const Range = ({ width, steps, onRangeValueChange }: IRange) => {
     };
   }, []);
 
+  const handleTouchStart = useCallback(
+    (e: React.TouchEvent<HTMLDivElement>) => {
+      const { slider } = getDOMs();
+
+      if (!slider) return;
+
+      const targetThumb = e.currentTarget;
+      targetThumb.classList.add('thumbMoving');
+
+      document.addEventListener('touchmove', handleTouchMove);
+      document.addEventListener('touchend', handleTouchEnd);
+
+      targetThumb.ondragstart = () => {
+        return false;
+      };
+    },
+    []
+  );
+
   return (
     <div className="slider h-10 relative" style={{ width: `${width}px` }}>
       <div className="track w-full h-2 bg-gray-300 rounded absolute top-4 left-0"></div>
@@ -126,6 +193,7 @@ const Range = ({ width, steps, onRangeValueChange }: IRange) => {
             className="thumb absolute top-2 h-6 border-emerald-400 border-4 bg-white rounded-lg z-[3] cursor-pointer"
             style={{ width: `${THUMB_WIDTH}px`, left: `${thumb.left}px` }}
             onMouseDown={handleMouseDown}
+            onTouchStart={handleTouchStart}
           ></div>
         );
       })}

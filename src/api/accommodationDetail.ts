@@ -61,21 +61,7 @@ export const AccommodationDetailInitData = {
   ]
 };
 
-export interface IRoomData {
-  accommodationName: string;
-  accommodationId: number;
-  address: string;
-  rate: number;
-  roomId: number;
-  roomName: string;
-  roomImg: string;
-  price: number;
-  checkInDate: string;
-  checkOutDate: string;
-  people: string;
-}
-
-export interface IReview {
+export interface IReviewContent {
   id: number;
   nickName: string;
   accommodationId: number;
@@ -84,15 +70,21 @@ export interface IReview {
 }
 
 export interface IReviewResponse {
-  content: IReview[];
+  content: IReviewContent[];
   totalElements: number;
   totalPages: number;
 }
 
-export const IReviewResponseContentInitData = {
-  id: 0,
-  nickName: '',
-  accommodationId: 0,
-  rating: 10,
-  description: ''
-};
+export interface IReservationConfirm {
+  accommodationName: string;
+  accommodationId: string;
+  roomName: string;
+  roomId: string;
+  address: string;
+  rate: number;
+  checkInDate: string;
+  checkOutDate: string;
+  people: string;
+  price: string;
+  imgUrl: string;
+}

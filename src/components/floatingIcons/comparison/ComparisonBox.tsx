@@ -1,53 +1,88 @@
-import { useRecoilState } from 'recoil';
-import { selectedAccommodation } from '../../../store/atom/comparisonAtom';
-import { addCommasToPrice } from '../../../helpers';
+import { SetterOrUpdater, useRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import {
+  selectedAccommodation,
+  selectedRoom
+} from '../../../store/atom/comparisonAtom';
+import { addCommasToPrice } from '../../../helpers';
 import { AlertModal } from '../../common/AlertModal';
 import { ComparisonModal } from './ComparisonModal';
+import { getSlashDateFormat } from '../../../utils/handleDate';
+import { IComparisonBoxProps, IComparisonItem } from './Comparison';
 
-export const ComparisonBox = ({ display }: { display: boolean }) => {
-  const [selectedAcc, setSelectedAcc] = useRecoilState(selectedAccommodation);
+interface IComparisonBox {
+  display: boolean;
+  source: string;
+}
+
+export const ComparisonBox = ({ display, source }: IComparisonBox) => {
+  let data: IComparisonBoxProps[],
+    setData: SetterOrUpdater<IComparisonBoxProps[]>;
   const [alertModalState, setAlertModalState] = useState(false);
   const [comparisonModalState, setComparisonModalState] = useState(false);
+  const [comparisonItems, setComparisonItems] = useState<IComparisonItem[]>([]);
+
+  if (source === 'room') {
+    const [selectedRooms, setSelectedRooms] = useRecoilState(selectedRoom);
+    data = selectedRooms;
+    setData = setSelectedRooms;
+  } else {
+    const [selectedAcc, setSelectedAcc] = useRecoilState(selectedAccommodation);
+    data = selectedAcc;
+    setData = setSelectedAcc;
+  }
 
   const navigate = useNavigate();
   const urlParams = new URLSearchParams(
     '?' + window.location.hash.split('?')[1]
   );
+
   const {
     checkindate: checkInDate,
     checkoutdate: checkOutDate,
     people: people
   } = Object.fromEntries(urlParams.entries());
 
-  const convertDateFormat = (date: string) => {
-    const [, month, day] = date.split('-');
-    return `${month}/${day}`;
+  const handleComparison = () => {
+    if (data.length < 2) setAlertModalState(true);
+    else {
+      const comparisonData = data.map((el) => {
+        return {
+          accommodationId: el.accommodationId,
+          roomId: el.roomId.toString(),
+          checkInDate: checkInDate,
+          checkOutDate: checkOutDate,
+          people: people
+        };
+      });
+      setComparisonItems(comparisonData);
+      setComparisonModalState(true);
+    }
   };
 
-  const handleComparison = () => {
-    if (selectedAcc.length < 2) setAlertModalState(true);
-    else setComparisonModalState(true);
-  };
   const deleteSelectedAcc = (idx: number) => {
-    const newItems = selectedAcc.filter((_, i) => i !== idx);
-    setSelectedAcc(newItems);
+    const newItems = data.filter((_, i) => i !== idx);
+    setData(newItems);
   };
 
   return (
     <article
-      className={`flex flex-col justify-between chat chat-end absolute bottom-6 right-16 md:right-20 w-80 h-fit ${
-        display ? 'block' : 'hidden'
-      }`}
+      className={`flex flex-col justify-between chat chat-end absolute ${
+        source === 'room'
+          ? 'bottom-16 md:bottom-28 right-16 md:right-20'
+          : 'bottom-6 right-16 md:right-20'
+      } w-80 h-fit ${display ? 'block' : 'hidden'}`}
     >
-      <div className="chat-bubble chat-bubble-info flex flex-col justify-between w-full h-fit">
-        {selectedAcc.length === 0 && (
-          <div className="flex items-center justify-center w-full h-20 mb-2 text-sm bg-white rounded-xl">
-            상품을 담아주세요
+      <div className="chat-bubble bg-[#1A1A3D] flex flex-col justify-between w-full h-fit">
+        {data.length === 0 && (
+          <div className="flex items-center justify-center w-full h-20 mb-2 text-sm bg-white rounded-xl text-black">
+            {source === 'room'
+              ? '원하시는 객실을 담아주세요'
+              : '원하시는 숙소를 담아주세요'}
           </div>
         )}
-        {selectedAcc.map((el, idx) => {
+        {data.map((el, idx) => {
           return (
             <div
               key={idx}
@@ -56,25 +91,26 @@ export const ComparisonBox = ({ display }: { display: boolean }) => {
               <figure
                 className="w-5/12 object-cover rounded-s-lg cursor-pointer tooltip tooltip-warning tooltip-right"
                 data-tip="자세히보기"
-                onClick={() =>
+                onClick={() => {
                   navigate(
-                    `/accommodation/${el.id}?&checkindate=${checkInDate}&checkoutdate=${checkOutDate}&people=${people}&rate=${el.rate}`
-                  )
-                }
+                    `/accommodation/${el.accommodationId}?&checkindate=${checkInDate}&checkoutdate=${checkOutDate}&people=${people}`
+                  );
+                  location.reload();
+                }}
               >
                 <img
-                  src={el.picUrl}
+                  src={el.imgUrl}
                   alt={`${el.accommodationName} image`}
                   className="rounded-s-lg h-full w-full"
                 />
               </figure>
-              <div className="w-5/12 text-sm">
+              <div className="w-5/12 text-sm text-black">
                 <p className="truncate font-semibold text-base">
                   {el.accommodationName}
                 </p>
                 <p>
-                  {convertDateFormat(checkInDate)} ~{' '}
-                  {convertDateFormat(checkOutDate)}
+                  {getSlashDateFormat(checkInDate)} ~{' '}
+                  {getSlashDateFormat(checkOutDate)}
                 </p>
                 <p>{addCommasToPrice(el.price)}원</p>
               </div>
@@ -94,6 +130,7 @@ export const ComparisonBox = ({ display }: { display: boolean }) => {
         </div>
       </div>
       <ComparisonModal
+        data={comparisonItems}
         modalState={comparisonModalState}
         handleModal={setComparisonModalState}
       />

@@ -43,6 +43,7 @@ export interface ISearchResultContent {
   lon: number;
   category: number;
   picUrl: string;
+  info: string;
 }
 
 interface ISearchResultResponse {
