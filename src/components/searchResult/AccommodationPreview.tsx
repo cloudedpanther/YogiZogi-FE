@@ -6,7 +6,7 @@ import { ISearchResultContent } from 'api/search';
 import { selectedAccommodation } from '../../store/atom/comparisonAtom';
 import { AlertModal } from '../../components/common/AlertModal';
 import { addCommasToPrice } from '../../helpers';
-import { IComparisonBoxProps } from 'components/floatingIcons/comparison/types';
+import { IComparisonBoxProps } from '../../components/floatingIcons/comparison/types';
 
 interface IAccommodationPreview {
   data: ISearchResultContent;
