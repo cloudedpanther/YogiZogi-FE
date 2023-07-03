@@ -33,15 +33,18 @@ export const DraggableAccommodationList = ({
         ? `/accommodation/compare/accommodation?accommodationid=${el.accommodationId}&checkindate=${el.checkInDate}&checkoutdate=${el.checkOutDate}&people=${el.people}`
         : `/accommodation/compare/room?roomid=${el.roomId}&checkindate=${el.checkInDate}&checkoutdate=${el.checkOutDate}&people=${el.people}`;
 
-    return fetchData.get(fetchUrl).then((res: any) => {
-      return {
-        ...res.data.data,
-        accommodationId: el.accommodationId,
-        checkInDate: el.checkInDate,
-        checkOutDate: el.checkOutDate,
-        people: el.people
-      };
-    });
+    return fetchData
+      .get(fetchUrl)
+      .then((res: any) => {
+        return {
+          ...res.data.data,
+          accommodationId: el.accommodationId,
+          checkInDate: el.checkInDate,
+          checkOutDate: el.checkOutDate,
+          people: el.people
+        };
+      })
+      .catch((e) => console.log(e.message));
   };
 
   useEffect(() => {

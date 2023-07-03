@@ -80,7 +80,8 @@ const AccommodationDetail = () => {
           newReviewArr[page] = reviewRes.data.content;
           return newReviewArr;
         });
-      });
+      })
+      .catch((e) => console.log('리뷰 정보를 받아오지 못했습니다.'));
   };
 
   useEffect(() => {
@@ -101,7 +102,8 @@ const AccommodationDetail = () => {
           people,
           address
         }));
-      });
+      })
+      .catch((e) => console.log(`데이터를 받아오지 못했습니다.`));
 
     getReview(page);
   }, []);
