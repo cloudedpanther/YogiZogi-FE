@@ -25,3 +25,8 @@ export const getTomorrowString = () => {
   tomorrow.setDate(tomorrow.getDate() + 1);
   return getDateFormat(tomorrow);
 };
+
+export const getSlashDateFormat = (date: string) => {
+  const [, month, day] = date.split('-');
+  return `${month}/${day}`;
+};

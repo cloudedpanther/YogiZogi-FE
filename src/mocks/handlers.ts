@@ -75,10 +75,7 @@ export const handlers = [
         code: 'RESPONSE_SUCCESS',
         status: 'OK',
         msg: 'SUCCESS',
-        data: {
-          msg: '성공적으로 작업을 수행 했습니다.'
-        },
-        content: [
+        data: [
           {
             id: 7,
             userId: 3,
@@ -87,8 +84,8 @@ export const handlers = [
             accommodationName: 'ACB 호텔',
             picUrl:
               'https://image.goodchoice.kr/resize_1000X500x0/affiliate/2020/03/24/5e799e9748723.jpg',
-            startDate: '2023-06-13',
-            endDate: '2023-06-15',
+            checkInDate: '2023-06-13',
+            checkOutDate: '2023-06-15',
             price: 180000,
             rate: 8.7,
             reviewRegistered: true
@@ -101,8 +98,8 @@ export const handlers = [
             accommodationName: 'ABC 호텔',
             picUrl:
               'https://image.goodchoice.kr/resize_1000X500x0/affiliate/2020/03/24/5e799e9748723.jpg',
-            startDate: '2023-06-01',
-            endDate: '2023-06-02',
+            checkInDate: '2023-06-01',
+            checkOutDate: '2023-06-02',
             price: 100000,
             rate: 8.6,
             reviewRegistered: false
@@ -115,8 +112,8 @@ export const handlers = [
             accommodationName: 'BAC 호텔',
             picUrl:
               'https://image.goodchoice.kr/resize_1000X500x0/affiliate/2020/03/24/5e799e9748723.jpg',
-            startDate: '2023-07-01',
-            endDate: '2023-07-04',
+            checkInDate: '2023-07-01',
+            checkOutDate: '2023-07-04',
             price: 20000,
             rate: 9.3,
             reviewRegistered: false
@@ -181,21 +178,6 @@ export const handlers = [
         if (!maxprice) return true;
 
         if (data.price) return data.price <= Number(maxprice);
-      })
-      .filter((data) => {
-        if (category === Category.HOTEL) {
-          return data.category === 1;
-        }
-
-        if (category === Category.MOTEL) {
-          return data.category === 2;
-        }
-
-        if (category === Category.PENSION) {
-          return data.category === 3;
-        }
-
-        return true;
       })
       .map((data) => {
         return {
@@ -356,7 +338,9 @@ export const handlers = [
     const checkindate = req.url.searchParams.get('checkindate');
     const checkoutdate = req.url.searchParams.get('checkoutdate');
     const people = req.url.searchParams.get('people');
-    const data = accommodationDetailData.find((data) => data.id == Number(accommodationId));
+    const data = accommodationDetailData.find(
+      (data) => data.id == Number(accommodationId)
+    );
 
     if (!data) {
       return res(
