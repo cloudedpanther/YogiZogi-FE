@@ -32,8 +32,10 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
 
     if (
       lastTimeStamp &&
-      JSON.parse(lastTimeStamp) === getDateFormat(new Date())
-    ) {
+      JSON.parse(lastTimeStamp) !== getDateFormat(new Date())
+    )
+      localStorage.clear();
+    else {
       if (selectedRooms) {
         const parsedData = JSON.parse(selectedRooms);
         setSelectedRooms(parsedData);
@@ -89,12 +91,21 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
 
   const saveComparisonData = () => {
     const handleBeforeUnload = () => {
-      localStorage.setItem('lastTimeStamp', JSON.stringify(getDateFormat(new Date())));
-      localStorage.setItem('selectedRoom', JSON.stringify(selectedRooms));
-      localStorage.setItem(
-        'selectedAccommodation',
-        JSON.stringify(selectedAcc)
-      );
+      const today = getDateFormat(new Date());
+      const lastTimeStamp = localStorage.getItem('lastTimeStamp');
+
+      if (lastTimeStamp && lastTimeStamp !== today) localStorage.clear();
+      else {
+        localStorage.setItem(
+          'lastTimeStamp',
+          JSON.stringify(getDateFormat(new Date()))
+        );
+        localStorage.setItem('selectedRoom', JSON.stringify(selectedRooms));
+        localStorage.setItem(
+          'selectedAccommodation',
+          JSON.stringify(selectedAcc)
+        );
+      }
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
