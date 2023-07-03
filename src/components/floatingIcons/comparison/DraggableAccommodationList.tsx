@@ -22,7 +22,7 @@ export const DraggableAccommodationList = ({
   const [selectedItemInfo, setSelectedItemInfo] = useState<
     IComparisonResponse[]
   >([]);
-  
+
   const minPrice = Math.min(...selectedItemInfo.map((el) => el.price));
   const highRate = Math.max(...selectedItemInfo.map((el) => el.rate));
 
@@ -107,9 +107,6 @@ export const DraggableAccommodationList = ({
                   >
                     {(provided, snapshot) => (
                       <>
-                        {idx === 1 && data.length === 3 && (
-                          <div className="divider w-1 h-full m-0 bg-gray-300"></div>
-                        )}
                         <li
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
@@ -149,6 +146,9 @@ export const DraggableAccommodationList = ({
                             <p className="truncate block font-semibold mr-1">
                               {el.accommodationName}
                             </p>
+                            {el.roomName && (
+                              <p className="truncate">{el.roomName}</p>
+                            )}
                             {comparisonData[idx] && (
                               <PriceComparisonChart
                                 data={comparisonData[idx]}
