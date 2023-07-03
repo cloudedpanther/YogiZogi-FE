@@ -7,7 +7,7 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import { addCommasToPrice } from '../../../helpers';
 import RatingStars from '../../common/RatingStars';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { IComparisonItem, IComparisonResponse } from './types';
 import { fetchData } from '../../../api';
 import { PriceComparisonChart } from './PriceComparisonChart';
@@ -17,6 +17,7 @@ export const DraggableAccommodationList = ({
 }: {
   data: IComparisonItem[];
 }) => {
+  const navigate = useNavigate();
   const [comparisonData, setComparisonData] = useState([...data]);
   const [selectedItemInfo, setSelectedItemInfo] = useState<
     IComparisonResponse[]
@@ -72,7 +73,11 @@ export const DraggableAccommodationList = ({
 
       const updatedselectedItemInfo = Array.from(selectedItemInfo);
       updatedselectedItemInfo.splice(source.index, 1);
-      updatedselectedItemInfo.splice(destination.index, 0, selectedItemInfo[source.index]);
+      updatedselectedItemInfo.splice(
+        destination.index,
+        0,
+        selectedItemInfo[source.index]
+      );
       setSelectedItemInfo(updatedselectedItemInfo);
 
       const updatedData = Array.from(comparisonData);
@@ -108,7 +113,7 @@ export const DraggableAccommodationList = ({
                           ref={provided.innerRef}
                           className={`w-44 pb-1 rounded-lg list-none bg-white hover:shadow-lg border-[#1A1A3D] ${
                             snapshot.isDragging ? 'shadow-lg' : ''
-                          } ${idx === 0 && 'border-2'}` }
+                          } ${idx === 0 && 'border-2'}`}
                           style={{
                             ...provided.draggableProps.style,
                             top: snapshot.isDragging ? '4.3rem' : '3rem',
@@ -184,13 +189,17 @@ export const DraggableAccommodationList = ({
                                 <div className="text-xs">{el.convenience}</div>
                               </details>
                             )}
-                            <Link
-                              to={`/accommodation/${el.accommodationId}?&checkindate=${el.checkInDate}&checkoutdate=${el.checkOutDate}&people=${el.people}`}
+                            <button
+                              onClick={() => {
+                                navigate(
+                                  `/accommodation/${el.accommodationId}?checkindate=${el.checkInDate}&checkoutdate=${el.checkOutDate}&people=${el.people}`
+                                );
+                                location.reload();
+                              }}
+                              className="btn mx-auto mt-2  btn-sm text-xs md:text-base font-normal border-red-500 bg-white"
                             >
-                              <button className="btn mx-auto mt-2  btn-sm text-xs md:text-base font-normal border-red-500 bg-white">
-                                바로가기
-                              </button>
-                            </Link>
+                              바로가기
+                            </button>
                           </div>
                         </li>
                       </>
