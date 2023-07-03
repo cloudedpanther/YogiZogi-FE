@@ -17,7 +17,7 @@ export const FloatingIcon = () => {
   return (
     <div className="fixed bottom-[5%] flex flex-col gap-1 md:gap-5 right-1 sm:right-5 md:right-10 z-20">
       <div className="indicator">
-        <span className="indicator-item badge bg-red-500 text-white w-4 h-4 md:w-6 md:h-6 right-3 top-3 text-[10px] md:text-base border-none">
+        <span className="indicator-item badge bg-red-500 text-white w-4 h-4 md:w-6 md:h-6 right-2 top-3 text-[10px] md:text-base border-none">
           {selectedRooms.length}
         </span>
         <button
@@ -36,7 +36,7 @@ export const FloatingIcon = () => {
         </button>
       </div>
       <div className="indicator">
-        <span className="indicator-item badge bg-red-500 text-white w-4 h-4 md:w-6 md:h-6 right-3 top-3 text-[10px] md:text-base border-none">
+        <span className="indicator-item badge bg-red-500 text-white w-4 h-4 md:w-6 md:h-6 right-2 top-3 text-[10px] md:text-base border-none">
           {selectedAcc.length}
         </span>
         <button
