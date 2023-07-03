@@ -71,7 +71,7 @@ const Nav = () => {
           <div className="flex-1 pl-2">
             <Link
               to="/"
-              className="cursor-pointer text-xl font-bold flex gap-2"
+              className="cursor-pointer w-fit text-xl font-bold flex gap-2"
             >
               <img
                 src="/assets/images/logo.png"

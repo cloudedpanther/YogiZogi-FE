@@ -9,7 +9,7 @@ import { ko } from 'date-fns/esm/locale';
 import { GetGeoInfo } from '../../utils/getGeoInfo';
 import { getDateFormat, getMonthDayFormat } from '../../utils/handleDate';
 import './SearchBar.css';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { BsPinMap } from 'react-icons/bs';
 import { AlertModal } from '../../components/common/AlertModal';
 
@@ -22,18 +22,38 @@ export interface SearchProps {
 }
 
 export const SearchBar = () => {
+  /**
+   * queryString value
+   */
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const paramKeyword = queryParams.get('keyword');
+  const paramCheckinDate = queryParams.get('checkindate');
+  const paramCheckoutDate = queryParams.get('checkoutdate');
+  const paramPeople = queryParams.get('people');
+  const paramLat = queryParams.get('lat');
+  const paramLon = queryParams.get('lon');
+
   const [search, setSearch] = useState<SearchProps>({
-    searchValue: '',
-    checkInDate:
-      new Date() > new Date(2023, 5, 30) && new Date() <= new Date(2023, 8, 30)
-        ? new Date()
-        : new Date(2023, 6, 1),
-    checkOutDate:
-      new Date() > new Date(2023, 5, 30) && new Date() <= new Date(2023, 8, 30)
-        ? new Date()
-        : new Date(2023, 6, 1),
-    people: 0,
-    userGeoInfo: [37.57, 126.9]
+    searchValue: paramKeyword
+      ? paramKeyword
+      : paramLat
+      ? '현재 위치에서 찾기'
+      : '',
+    checkInDate: paramCheckinDate
+      ? new Date(paramCheckinDate)
+      : new Date() > new Date(2023, 5, 30) &&
+        new Date() <= new Date(2023, 8, 30)
+      ? new Date()
+      : new Date(2023, 6, 1),
+    checkOutDate: paramCheckoutDate
+      ? new Date(paramCheckoutDate)
+      : new Date() > new Date(2023, 5, 30) &&
+        new Date() <= new Date(2023, 8, 30)
+      ? new Date()
+      : new Date(2023, 6, 1),
+    people: paramPeople ? Number(paramPeople) : 0,
+    userGeoInfo: [Number(paramLat || 37.57), Number(paramLon || 126.9)]
   });
 
   const [dateContent, setDateContent] = useState('');
@@ -110,12 +130,12 @@ export const SearchBar = () => {
         params.append('keyword', search.searchValue);
       }
 
-      const isInSearchResult = location.hash.includes('searchResult');
+      const isInSearchResult = location.pathname.includes('searchResult');
 
       const queryString = params.toString();
       navigate(`/searchResult?${queryString}`);
 
-      if (isInSearchResult) location.reload();
+      if (isInSearchResult) window.location.reload();
     }
   };
 
