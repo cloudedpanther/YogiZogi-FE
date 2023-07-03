@@ -1,4 +1,4 @@
 .star-selected,
 .star-hover {
-  color: rgb(250 204 21);
+  color: rgb(250 204 21) !important;
 }
