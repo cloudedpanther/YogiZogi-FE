@@ -14,6 +14,7 @@ import { RoomInfo } from '../components/accommodationDetail/RoomInfo';
 import { Review } from '../components/accommodationDetail/Review';
 import { AccommodationInfo } from '../components/accommodationDetail/AccommodationInfo';
 import './AccommodationDetail.css';
+import { FloatingIcon } from '../components/floatingIcons/FloatingIcon';
 
 const AccommodationDetail = () => {
   const [accommodationData, setAccommodationData] =
@@ -76,6 +77,7 @@ const AccommodationDetail = () => {
 
   return (
     <div className="flex flex-col gap-10 lg:pt-10 max-w-5xl mx-auto mb-20 p-5 lg:px-0">
+      <FloatingIcon />
       <div className="grid grid-rows-2 grid-cols-3 gap-2">
         {accommodationData &&
           accommodationData.picUrlList.slice(0, 3).map((el, idx) => {
