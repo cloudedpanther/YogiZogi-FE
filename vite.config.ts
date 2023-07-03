@@ -20,14 +20,5 @@ export default defineConfig({
         404: resolve(__dirname, 'public/404.html')
       }
     }
-  },
-  server: {
-    proxy: {
-      '/api': {
-        target: 'https://13.209.131.228:8443',
-        changeOrigin: true,
-        secure: false
-      }
-    }
   }
 });
