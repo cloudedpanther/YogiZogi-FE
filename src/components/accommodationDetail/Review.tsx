@@ -1,26 +1,26 @@
 import { useEffect, useState } from 'react';
 import {
   IAccommodationDetailResponse,
-  IReview,
+  IReviewContent,
   IReviewResponse,
   IReviewResponseContentInitData
 } from '../../api/accommodationDetail';
 import RatingStars from '../../components/common/RatingStars';
 import { fetchData } from '../../api';
 
-interface IReviewSection {
+interface IReview {
   id: string;
   accommodationData: IAccommodationDetailResponse;
   setPage: React.Dispatch<React.SetStateAction<number>>;
   page: number;
 }
 
-export const ReviewSection = ({
+export const Review = ({
   id,
   accommodationData,
   page,
   setPage
-}: IReviewSection) => {
+}: IReview) => {
   const rateAdj = [
     'Terrible',
     'Poor',
@@ -38,7 +38,7 @@ export const ReviewSection = ({
     totalElements: 0,
     totalPages: 0
   });
-  const [reviewArr, setReviewArr] = useState<IReview[]>([]);
+  const [reviewArr, setReviewArr] = useState<IReviewContent[]>([]);
 
   const getReview = async (page: number) => {
     fetchData
@@ -51,7 +51,7 @@ export const ReviewSection = ({
           totalPages: reviewRes.data.totalPages || 0
         });
         setReviewArr((prev) => {
-          const newReviewArr: IReview[] = [...prev];
+          const newReviewArr: IReviewContent[] = [...prev];
           newReviewArr[page] = reviewRes.data.data.content;
           return newReviewArr;
         });

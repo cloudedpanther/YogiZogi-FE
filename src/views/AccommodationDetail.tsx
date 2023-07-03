@@ -11,7 +11,7 @@ import {
   IModalProps
 } from '../components/accommodationDetail/CarouselModal';
 import { RoomInfo } from '../components/accommodationDetail/RoomInfo';
-import { ReviewSection } from '../components/accommodationDetail/ReviewSection';
+import { Review } from '../components/accommodationDetail/Review';
 import { AccommodationInfo } from '../components/accommodationDetail/AccommodationInfo';
 import './AccommodationDetail.css';
 
@@ -173,7 +173,7 @@ const AccommodationDetail = () => {
           </div>
         </div>
         <div className="divider" />
-        <ReviewSection
+        <Review
           id={id}
           accommodationData={accommodationData}
           page={page}
