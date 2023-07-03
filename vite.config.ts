@@ -20,14 +20,5 @@ export default defineConfig({
         404: resolve(__dirname, 'public/404.html')
       }
     }
-  },
-  server: {
-    proxy: {
-      '/api': {
-        target: 'https://yogizogi.shop/',
-        changeOrigin: true,
-        secure: false
-      }
-    }
   }
 });

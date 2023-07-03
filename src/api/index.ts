@@ -1,10 +1,8 @@
 import axios from 'axios';
 import { AUTH_TOKEN_KEY } from '../store/atom/authAtom';
-import useModal from '../hooks/useModal';
 
-export const BASE_URL = '/api';
+export const BASE_URL = 'https://yogizogi.shop/api';
 
-// const { openModal } = useModal();
 /**
  * 커스텀 axios 인스턴스 생성
  * token, baseUrl, header 공통 처리
