@@ -86,6 +86,28 @@ const SearchResult = () => {
     setIsLoading(true);
   });
 
+  const showObserver = useCallback(() => {
+    if (!observerTarget.current) return;
+
+    observerTarget.current.classList.remove('hidden');
+    observerTarget.current.classList.add(
+      'flex',
+      'justify-center',
+      'items-center'
+    );
+  }, [observerTarget]);
+
+  const hideObserver = useCallback(() => {
+    if (!observerTarget.current) return;
+
+    observerTarget.current.classList.remove(
+      'flex',
+      'justify-center',
+      'items-center'
+    );
+    observerTarget.current.classList.add('hidden');
+  }, [observerTarget]);
+
   const getParams = useCallback(() => {
     return {
       keyword: searchParams.current.keyword,
@@ -112,7 +134,7 @@ const SearchResult = () => {
 
       if (nextValue === View.MAP) {
         stopObserving();
-        observerTarget.current.classList.add('hidden');
+        hideObserver();
         return nextValue;
       }
 
@@ -207,7 +229,7 @@ const SearchResult = () => {
 
   const startObserving = useCallback(() => {
     if (observerTarget.current !== null) {
-      observerTarget.current.classList.remove('hidden');
+      showObserver();
       observe(observerTarget.current);
     }
   }, [observerTarget]);
@@ -285,7 +307,7 @@ const SearchResult = () => {
       return;
     }
 
-    observerTarget.current.classList.add('hidden');
+    hideObserver();
   }, [isLoading]);
 
   useEffect(() => {
@@ -434,7 +456,7 @@ const SearchResult = () => {
       </section>
       <div
         ref={observerTarget}
-        className="w-full h-60 hidden flex justify-center items-center"
+        className="w-full justify-center items-center h-60"
       >
         <p className="loading loading-spinner loading-lg"></p>
       </div>
