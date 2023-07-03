@@ -1,21 +1,22 @@
+import { useEffect, useState } from 'react';
 import {
   IAccommodationDetailResponse,
   IReview,
-  IReviewResponse
+  IReviewResponse,
+  IReviewResponseContentInitData
 } from '../../api/accommodationDetail';
 import RatingStars from '../../components/common/RatingStars';
+import { fetchData } from '../../api';
 
 interface IReviewSection {
-  reviewRes: IReviewResponse;
-  reviewArr: IReview[];
+  id: string;
   accommodationData: IAccommodationDetailResponse;
   setPage: React.Dispatch<React.SetStateAction<number>>;
   page: number;
 }
 
 export const ReviewSection = ({
-  reviewRes,
-  reviewArr,
+  id,
   accommodationData,
   page,
   setPage
@@ -32,6 +33,36 @@ export const ReviewSection = ({
     'Outstanding',
     'Perfect'
   ];
+  const [reviewRes, setReviewRes] = useState<IReviewResponse>({
+    content: [IReviewResponseContentInitData],
+    totalElements: 0,
+    totalPages: 0
+  });
+  const [reviewArr, setReviewArr] = useState<IReview[]>([]);
+
+  const getReview = async (page: number) => {
+    fetchData
+      .get(`/accommodation/${id}/review?page=${page}&pagesize=5`)
+      .then((reviewRes: any) => {
+        setReviewRes({
+          content:
+            reviewRes.data.data.content || IReviewResponseContentInitData,
+          totalElements: reviewRes.data.totalElements || 0,
+          totalPages: reviewRes.data.totalPages || 0
+        });
+        setReviewArr((prev) => {
+          const newReviewArr: IReview[] = [...prev];
+          newReviewArr[page] = reviewRes.data.data.content;
+          return newReviewArr;
+        });
+      });
+  };
+
+  useEffect(() => {
+    (async () => {
+      if (!reviewArr[page]) getReview(page);
+    })();
+  }, [page]);
 
   return (
     <>

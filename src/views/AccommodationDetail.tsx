@@ -4,32 +4,22 @@ import { fetchData } from '../api';
 import { AxiosResponse } from 'axios';
 import {
   AccommodationDetailInitData,
-  IAccommodationDetailResponse,
-  IReview,
-  IReviewResponse,
-  IReviewResponseContentInitData
+  IAccommodationDetailResponse
 } from '../api/accommodationDetail';
 import {
   CarouselModal,
   IModalProps
 } from '../components/accommodationDetail/CarouselModal';
-import './AccommodationDetail.css';
 import { RoomInfo } from '../components/accommodationDetail/RoomInfo';
 import { ReviewSection } from '../components/accommodationDetail/ReviewSection';
 import { AccommodationInfo } from '../components/accommodationDetail/AccommodationInfo';
+import './AccommodationDetail.css';
 
 const AccommodationDetail = () => {
   const [accommodationData, setAccommodationData] =
     useState<IAccommodationDetailResponse>(AccommodationDetailInitData);
 
   const [page, setPage] = useState(0);
-
-  const [reviewRes, setReviewRes] = useState<IReviewResponse>({
-    content: [IReviewResponseContentInitData],
-    totalElements: 0,
-    totalPages: 0
-  });
-  const [reviewArr, setReviewArr] = useState<IReview[]>([]);
 
   const [modalProps, setModalProps] = useState<IModalProps>({
     imgList: [],
@@ -64,24 +54,6 @@ const AccommodationDetail = () => {
     people: people
   });
 
-  const getReview = async (page: number) => {
-    fetchData
-      .get(`/accommodation/${id}/review?page=${page}&pagesize=5`)
-      .then((reviewRes: any) => {
-          setReviewRes({
-            content:
-              reviewRes.data.data.content || IReviewResponseContentInitData,
-            totalElements: reviewRes.data.totalElements || 0,
-            totalPages: reviewRes.data.totalPages || 0
-          });
-          setReviewArr((prev) => {
-            const newReviewArr: IReview[] = [...prev];
-            newReviewArr[page] = reviewRes.data.data.content;
-            return newReviewArr;
-          });
-      });
-  };
-
   useEffect(() => {
     (async () => {
       const result: AxiosResponse<any, any> | undefined = await fetchData.get(
@@ -99,15 +71,8 @@ const AccommodationDetail = () => {
           rate: data.rate
         }));
       }
-      getReview(page);
     })();
   }, [id]);
-
-  useEffect(() => {
-    (async () => {
-      if (!reviewArr[page]) getReview(page);
-    })();
-  }, [page]);
 
   return (
     <div className="flex flex-col gap-10 lg:pt-10 max-w-5xl mx-auto mb-20 p-5 lg:px-0">
@@ -209,11 +174,10 @@ const AccommodationDetail = () => {
         </div>
         <div className="divider" />
         <ReviewSection
+          id={id}
           accommodationData={accommodationData}
           page={page}
           setPage={setPage}
-          reviewArr={reviewArr}
-          reviewRes={reviewRes}
         />
       </section>
       <CarouselModal
