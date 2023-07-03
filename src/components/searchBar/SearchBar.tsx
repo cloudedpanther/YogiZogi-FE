@@ -140,7 +140,7 @@ export const SearchBar = () => {
           <img
             src="./assets/icons/location.svg"
             alt="location icon"
-            className="cursor-pointer w-6 h-6"
+            className="cursor-pointer w-6 h-6 brightness-0"
             onClick={() => {
               GetGeoInfo(setSearch);
               handleSearchState('searchValue', '현재 위치에서 찾기');
