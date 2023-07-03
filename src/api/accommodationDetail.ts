@@ -75,7 +75,7 @@ export interface IRoomData {
   people: string;
 }
 
-export interface IReview {
+export interface IReviewContent {
   id: number;
   nickName: string;
   accommodationId: number;
@@ -84,7 +84,7 @@ export interface IReview {
 }
 
 export interface IReviewResponse {
-  content: IReview[];
+  content: IReviewContent[];
   totalElements: number;
   totalPages: number;
 }
