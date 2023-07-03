@@ -65,21 +65,21 @@ const AccommodationDetail = () => {
   });
 
   const getReview = async (page: number) => {
-    const reviewRes: AxiosResponse<any, any> | undefined = await fetchData.get(
-      `/accommodation/${id}/review?page=${page}&pagesize=5`
-    );
-    if (reviewRes && reviewRes.data) {
-      setReviewRes({
-        content: reviewRes.data.content || IReviewResponseContentInitData,
-        totalElements: reviewRes.data.totalElements || 0,
-        totalPages: reviewRes.data.totalPages || 0
+    fetchData
+      .get(`/accommodation/${id}/review?page=${page}&pagesize=5`)
+      .then((reviewRes: any) => {
+          setReviewRes({
+            content:
+              reviewRes.data.data.content || IReviewResponseContentInitData,
+            totalElements: reviewRes.data.totalElements || 0,
+            totalPages: reviewRes.data.totalPages || 0
+          });
+          setReviewArr((prev) => {
+            const newReviewArr: IReview[] = [...prev];
+            newReviewArr[page] = reviewRes.data.data.content;
+            return newReviewArr;
+          });
       });
-      setReviewArr((prev) => {
-        const newReviewArr: IReview[] = [...prev];
-        newReviewArr[page] = reviewRes.data.content;
-        return newReviewArr;
-      });
-    }
   };
 
   useEffect(() => {
