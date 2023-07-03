@@ -26,7 +26,7 @@ export const DraggableAccommodationList = ({
   const minPrice = Math.min(...selectedItemInfo.map((el) => el.price));
   const highRate = Math.max(...selectedItemInfo.map((el) => el.rate));
 
-  const hasConveniences = selectedItemInfo.some(el => el.convenience === '')
+  const hasConveniences = selectedItemInfo.some((el) => el.convenience === '');
 
   const fetchDataForItem = (el: any) => {
     const fetchUrl =
@@ -34,16 +34,18 @@ export const DraggableAccommodationList = ({
         ? `/accommodation/compare/accommodation?accommodationid=${el.accommodationId}&checkindate=${el.checkInDate}&checkoutdate=${el.checkOutDate}&people=${el.people}`
         : `/accommodation/compare/room?roomid=${el.roomId}&checkindate=${el.checkInDate}&checkoutdate=${el.checkOutDate}&people=${el.people}`;
 
-    return fetchData.get(fetchUrl).then((res: any) => {
-      return {
-        ...res.data.data,
-        accommodationId: el.accommodationId,
-        checkInDate: el.checkInDate,
-        checkOutDate: el.checkOutDate,
-        people: el.people
-      };
-    })
-    .catch(() => {});
+    return fetchData
+      .get(fetchUrl)
+      .then((res: any) => {
+        return {
+          ...res.data.data,
+          accommodationId: el.accommodationId,
+          checkInDate: el.checkInDate,
+          checkOutDate: el.checkOutDate,
+          people: el.people
+        };
+      })
+      .catch(() => {});
   };
 
   useEffect(() => {
@@ -146,6 +148,14 @@ export const DraggableAccommodationList = ({
                             <p className="truncate block font-semibold mr-1">
                               {el.accommodationName}
                             </p>
+                            {el.roomName && (
+                              <p className="truncate">{el.roomName}</p>
+                            )}
+                            {comparisonData[idx] && (
+                              <PriceComparisonChart
+                                data={comparisonData[idx]}
+                              />
+                            )}
                             {el.roomName && (
                               <p className="truncate">{el.roomName}</p>
                             )}
