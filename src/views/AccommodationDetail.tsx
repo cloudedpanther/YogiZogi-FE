@@ -42,16 +42,16 @@ const AccommodationDetail = () => {
 
   const [roomData, setRoomData] = useState({
     accommodationName: '',
-    accommodationId: 0,
+    accommodationId: '',
+    roomId: '',
+    roomName: '',
     address: '',
     rate: 0,
-    roomId: 0,
-    roomName: '',
-    roomImg: '',
-    price: 0,
     checkInDate: checkInDate,
     checkOutDate: checkOutDate,
-    people: people
+    people: people,
+    price: '',
+    imgUrl: ''
   });
 
   useEffect(() => {
@@ -165,7 +165,6 @@ const AccommodationDetail = () => {
               <RoomInfo
                 roomInfo={accommodationData.rooms}
                 setModalProps={setModalProps}
-                accommodationName={accommodationData.accommodationName}
                 setRoomData={setRoomData}
                 roomData={roomData}
               />

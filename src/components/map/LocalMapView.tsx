@@ -1,4 +1,3 @@
-import { BiMap } from 'react-icons/bi';
 import LocalMap from './LocalMap';
 import { PositionProps } from '../../api/map';
 import useLocalMap from '../../hooks/useLocalMap';
@@ -27,7 +26,11 @@ const LocalMapView = ({ address, position }: LocalMapViewProp) => {
         </div>
         <div className="flex flex-col gap-2 lg:justify-center px-2">
           <div className="line-clamp-1">
-            <BiMap className="inline-flex items-center h-6 w-6 pb-1" />
+            <img
+              src="./assets/icons/location.svg"
+              alt="destination icon"
+              className="inline-flex items-center h-6 w-6 pb-1"
+            />
             {address}
           </div>
 

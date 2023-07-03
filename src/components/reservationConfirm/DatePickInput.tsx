@@ -1,6 +1,5 @@
 import DatePicker from 'react-datepicker';
 import { ko } from 'date-fns/esm/locale';
-import { LuCalendarDays } from 'react-icons/lu';
 import { getDateFormat } from '../../utils/handleDate';
 import { useCallback, useState, useRef } from 'react';
 
@@ -51,7 +50,7 @@ const DatePickInput = ({
         onClick={handleInputClick}
       >
         <p>{getDateFormat(date)}</p>
-        <LuCalendarDays className="text-lg block" />
+        <img src="./assets/icons/calendar.svg" alt="calendar icon" className="text-lg block"/>
       </button>
       <div
         ref={calendarRef}

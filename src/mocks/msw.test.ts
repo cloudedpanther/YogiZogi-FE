@@ -35,8 +35,8 @@ describe('MSW Fetch Test: ', () => {
         accommodationName: 'ACB 호텔',
         picUrl:
           'https://image.goodchoice.kr/resize_1000X500x0/affiliate/2020/03/24/5e799e9748723.jpg',
-        startDate: '2023-06-13',
-        endDate: '2023-06-15',
+        checkInDate: '2023-06-13',
+        checkOutDate: '2023-06-15',
         price: 180000,
         rate: 8.7,
         reviewRegistered: true
@@ -49,8 +49,8 @@ describe('MSW Fetch Test: ', () => {
         accommodationName: 'ABC 호텔',
         picUrl:
           'https://image.goodchoice.kr/resize_1000X500x0/affiliate/2020/03/24/5e799e9748723.jpg',
-        startDate: '2023-06-01',
-        endDate: '2023-06-02',
+        checkInDate: '2023-06-01',
+        checkOutDate: '2023-06-02',
         price: 100000,
         rate: 8.6,
         reviewRegistered: false
@@ -63,8 +63,8 @@ describe('MSW Fetch Test: ', () => {
         accommodationName: 'BAC 호텔',
         picUrl:
           'https://image.goodchoice.kr/resize_1000X500x0/affiliate/2020/03/24/5e799e9748723.jpg',
-        startDate: '2023-07-01',
-        endDate: '2023-07-04',
+        checkInDate: '2023-07-01',
+        checkOutDate: '2023-07-04',
         price: 20000,
         rate: 9.3,
         reviewRegistered: false
@@ -72,12 +72,12 @@ describe('MSW Fetch Test: ', () => {
     ];
 
     const {
-      data: { content }
+      data: { data }
     } = await axios('/api/user/1/mybook');
 
-    expectTypeOf(content).toBeArray();
+    expectTypeOf(data).toBeArray();
     for (let i = 0; i < result.length; i++) {
-      expect(content[i]).toEqual(result[i]);
+      expect(data[i]).toEqual(result[i]);
     }
   });
 
