@@ -243,7 +243,7 @@ export const SearchBar = () => {
             onClick={handleSearch}
           >
             <img src="./assets/icons/search.svg" alt="search icon" />
-            <span className="hidden lg:block text-lg">검색</span>
+            <span className="hidden lg:block text-lg text-white font-normal">검색</span>
           </button>
         </div>
       </div>
