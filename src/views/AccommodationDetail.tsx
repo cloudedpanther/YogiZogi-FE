@@ -1,10 +1,11 @@
 import LocalMapView from '../components/map/LocalMapView';
 import { useEffect, useState } from 'react';
 import { fetchData } from '../api';
-import { AxiosResponse } from 'axios';
 import {
   AccommodationDetailInitData,
-  IAccommodationDetailResponse
+  IAccommodationDetailResponse,
+  IReservationConfirm,
+  IRoomResponse
 } from '../api/accommodationDetail';
 import {
   CarouselModal,
@@ -41,7 +42,7 @@ const AccommodationDetail = () => {
     people
   } = Object.fromEntries(urlParams.entries());
 
-  const [roomData, setRoomData] = useState({
+  const [roomData, setRoomData] = useState<IReservationConfirm>({
     accommodationName: '',
     accommodationId: '',
     roomId: '',
@@ -56,28 +57,28 @@ const AccommodationDetail = () => {
   });
 
   useEffect(() => {
-    (async () => {
-      const result: AxiosResponse<any, any> | undefined = await fetchData.get(
+    fetchData
+      .get(
         `/accommodation/${id}?checkindate=${checkInDate}&checkoutdate=${checkOutDate}&people=${people}`
-      );
-
-      if (result) {
-        const data = result.data.data;
-        setAccommodationData(data);
+      )
+      .then((res: any) => {
+        res.data.data.rooms = res.data.data.rooms.filter(
+          (room: IRoomResponse) => room.pictureUrlList.length > 0
+        );
+        const { accommodationName, rate, address } = res.data.data;
+        setAccommodationData({ ...res.data.data });
         setRoomData((prev) => ({
           ...prev,
-          accommodationName: data.accommodationName,
-          accommodationId: data.id,
-          address: data.address,
-          rate: data.rate
+          accommodationName,
+          rate,
+          people,
+          address
         }));
-      }
-    })();
+      });
   }, [id]);
 
   return (
     <div className="flex flex-col gap-10 lg:pt-10 max-w-5xl mx-auto mb-20 p-5 lg:px-0">
-      <FloatingIcon />
       <div className="grid grid-rows-2 grid-cols-3 gap-2">
         {accommodationData &&
           accommodationData.picUrlList.slice(0, 3).map((el, idx) => {
@@ -163,7 +164,7 @@ const AccommodationDetail = () => {
             객실안내 및 예약
           </h2>
           <div className="flex flex-col gap-5 text-xs sm:text-sm md:text-base">
-            {accommodationData && accommodationData.rooms && (
+            {accommodationData && (
               <RoomInfo
                 roomInfo={accommodationData.rooms}
                 setModalProps={setModalProps}
@@ -181,6 +182,7 @@ const AccommodationDetail = () => {
           setPage={setPage}
         />
       </section>
+      <FloatingIcon />
       <CarouselModal
         imgList={modalProps.imgList}
         alt={modalProps.alt}
