@@ -22,7 +22,7 @@ export const ComparisonModal = ({
         onChange={() => handleModal(!modalState)}
       />
       <div className="modal">
-        <div className="modal-box md:w-[600px] max-w-full h-fit overflow-hidden">
+        <div className="modal-box md:w-[600px] max-w-full h-fit">
           <div className="overflow-x-auto">
             <h2 className="mb-3 text-2xl font-semibold text-center">
               한 눈에 비교하기

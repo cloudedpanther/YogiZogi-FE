@@ -8,7 +8,7 @@ import {
 import { addCommasToPrice } from '../../../helpers';
 import { AlertModal } from '../../common/AlertModal';
 import { ComparisonModal } from './ComparisonModal';
-import { getSlashDateFormat } from '../../../utils/handleDate';
+import { getDateFormat, getSlashDateFormat } from '../../../utils/handleDate';
 import { IComparisonBoxProps, IComparisonItem } from './types';
 
 interface IComparisonBox {
@@ -26,9 +26,16 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
   const [selectedAcc, setSelectedAcc] = useRecoilState(selectedAccommodation);
 
   useEffect(() => {
+    const lastTimeStamp = localStorage.getItem('lastTimeStamp');
     const selectedRooms = localStorage.getItem('selectedRoom');
-      const selectedAcc = localStorage.getItem('selectedAccommodation');
+    const selectedAcc = localStorage.getItem('selectedAccommodation');
 
+    if (
+      lastTimeStamp &&
+      JSON.parse(lastTimeStamp) !== getDateFormat(new Date())
+    )
+      localStorage.clear();
+    else {
       if (selectedRooms) {
         const parsedData = JSON.parse(selectedRooms);
         setSelectedRooms(parsedData);
@@ -38,6 +45,7 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
         const parsedData = JSON.parse(selectedAcc);
         setSelectedAcc(parsedData);
       }
+    }
   }, []);
 
   if (source === 'room') {
@@ -83,11 +91,21 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
 
   const saveComparisonData = () => {
     const handleBeforeUnload = () => {
-      localStorage.setItem('selectedRoom', JSON.stringify(selectedRooms));
-      localStorage.setItem(
-        'selectedAccommodation',
-        JSON.stringify(selectedAcc)
-      );
+      const today = getDateFormat(new Date());
+      const lastTimeStamp = localStorage.getItem('lastTimeStamp');
+
+      if (lastTimeStamp && lastTimeStamp !== today) localStorage.clear();
+      else {
+        localStorage.setItem(
+          'lastTimeStamp',
+          JSON.stringify(getDateFormat(new Date()))
+        );
+        localStorage.setItem('selectedRoom', JSON.stringify(selectedRooms));
+        localStorage.setItem(
+          'selectedAccommodation',
+          JSON.stringify(selectedAcc)
+        );
+      }
     };
 
     window.addEventListener('beforeunload', handleBeforeUnload);
@@ -148,7 +166,11 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
                 <p>{addCommasToPrice(el.price)}원</p>
               </div>
               <button
-                onClick={() => deleteSelectedAcc(idx)}
+                onClick={(e) => {
+                  e.stopPropagation();
+
+                  deleteSelectedAcc(idx);
+                }}
                 className="badge badge-neutral badge-sm mt-1 mr-1 w-3 text-white"
               >
                 ✕
