@@ -4,6 +4,7 @@ import FacilityMarker from './marker/FacilityMarker';
 import { ISearchResultContent } from 'api/search';
 import useDynamicMap from '../../hooks/useDynamicMap';
 import { useNavigate } from 'react-router-dom';
+import { addCommasToPrice } from '../../helpers';
 
 interface DynamicMapProps {
   searchData: ISearchResultContent[];
@@ -142,8 +143,6 @@ const FacilityDetailBox = ({
   if (!info) {
     return <></>;
   }
-  const formatPrice = info.price.toLocaleString('kr');
-
   return (
     <div
       className="absolute bottom-8 px-4 w-full h-auto z-10 sm:hidden"
@@ -165,7 +164,9 @@ const FacilityDetailBox = ({
             <span className="text-sm truncate">{info.address}</span>
           </div>
           <div className="flex justify-between gap-2">
-            <span className="font-normal text-md">₩{formatPrice}</span>
+            <span className="font-normal text-md">
+              ₩{addCommasToPrice(info.price)}
+            </span>
             <span className="flex items-center text-md">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
