@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { GetGeoInfo } from '../../utils/getGeoInfo';
 import { getDateFormat, getMonthDayFormat } from '../../utils/handleDate';
-import './SearchBar.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AlertModal } from '../../components/common/AlertModal';
 import { Calendar } from './Calendar';
