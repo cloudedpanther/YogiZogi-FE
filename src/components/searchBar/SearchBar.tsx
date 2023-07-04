@@ -153,7 +153,7 @@ export const SearchBar = () => {
             <img src="./assets/icons/calendar.svg" alt="calendar icon" />
             <span>기간</span>
           </div>
-          <div className="cursor-pointer" onClick={() => setCalendarState(true)}>
+            <div className="cursor-pointer" onClick={() => setCalendarState(true)}>
             {dateContent !== '' && !calendarState ? dateContent : '날짜 선택하기'}
           </div>
           <Calendar search={search} handleSearchState={handleSearchState} calendarState={calendarState} setCalendarState={setCalendarState}/>

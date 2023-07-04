@@ -4,7 +4,7 @@ import { resolve } from 'path';
 
 export default defineConfig({
   plugins: [react()],
-  base: '/FE',
+  base: '/',
   test: {
     globals: true,
     setupFiles: ['./src/mocks/setupTests.ts'],
