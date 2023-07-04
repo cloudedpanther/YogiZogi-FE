@@ -74,10 +74,8 @@ const AccommodationDetail = () => {
           people,
           address
         }));
-      })
-      .catch((e) => console.log(`데이터를 받아오지 못했습니다.`));
+      });
   }, []);
-
 
   return (
     <div className="flex flex-col gap-10 lg:pt-10 max-w-5xl mx-auto mb-20 p-5 lg:px-0">

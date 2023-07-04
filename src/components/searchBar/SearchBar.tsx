@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { GetGeoInfo } from '../../utils/getGeoInfo';
 import { getDateFormat, getMonthDayFormat } from '../../utils/handleDate';
 import { useLocation, useNavigate } from 'react-router-dom';
