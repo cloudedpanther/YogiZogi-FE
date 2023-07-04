@@ -1,5 +1,4 @@
-import useSignIn from '../../hooks/useSignIn';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { SearchBar } from '../searchBar/SearchBar';
 import useAuth from '../../hooks/useAuth';
