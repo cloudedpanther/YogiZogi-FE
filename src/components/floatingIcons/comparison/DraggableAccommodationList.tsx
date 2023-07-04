@@ -45,18 +45,20 @@ export const DraggableAccommodationList = ({
           people: el.people
         };
       })
-      .catch((e) => console.log(e.message));
+      .catch(() => {});
   };
 
   useEffect(() => {
     const fetchDataForAllItems = async () => {
       const promises = data.map((el) => fetchDataForItem(el));
-      const results = await Promise.all(promises);
-      setSelectedItemInfo(results);
+      try {
+        const results = await Promise.all(promises);
+        setSelectedItemInfo(results);
+      } catch {
+        setSelectedItemInfo([]);
+      }
     };
-
     setComparisonData([...data]);
-
     fetchDataForAllItems();
   }, [data]);
 
@@ -134,12 +136,13 @@ export const DraggableAccommodationList = ({
                             className="flex flex-col gap-y-1 text-center w-full px-1 text-xs md:text-base rounded-lg"
                           >
                             <figure className="relative h-32 object-cover mx-1">
-                              <div className="absolute top-[-10px] left-16 badge bg-red-500 text-white font-bold">
+                              <div className="absolute top-[-10px] left-16 badge border border-gray-300 bg-white-500 font-bold">
                                 {' '}
                                 · · ·
                               </div>
                               <img
                                 src={el.picUrl}
+                                alt={`${el.accommodationName} image`}
                                 className="w-full h-full rounded-lg"
                               />
                             </figure>
