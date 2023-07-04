@@ -5,8 +5,7 @@ const Main = () => {
     <div
       className="bg-no-repeat bg-cover"
       style={{
-        backgroundImage:
-          'url(https://yogizogi-zerobase-2023.github.io/FE/assets/images/main.png)'
+        backgroundImage: 'url("/assets/images/main.png")'
       }}
     >
       <div className="h-[calc(100vh-144px)] md:h-[calc(100vh-112px)] max-w-[1024px] m-auto flex flex-col justify-center">
