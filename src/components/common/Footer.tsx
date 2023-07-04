@@ -1,11 +1,12 @@
 import { BsGithub } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
-import { SiNaver, SiTistory } from 'react-icons/si';
+import { SiNaver, SiTistory, SiNotion } from 'react-icons/si';
 import { SiVelog } from 'react-icons/si';
 
 const channels = [
   {
     name: 'YogiZogi',
+    notion: 'https://www.notion.so/YOGIZOGI-fd26b4d3490b431e8753780ebad4b6fc',
     github: 'https://github.com/orgs/YOGIZOGI-Zerobase-2023/repositories'
   },
   {
@@ -54,13 +55,21 @@ const Footer = () => {
                 className="flex w-full justify-center items-center gap-2"
               >
                 <div className="tooltip" data-tip={`${channel.name} Github`}>
-                  <Link to={channel.github}>
+                  <Link
+                    to={channel.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <BsGithub className="w-5 h-5 " />
                   </Link>
                 </div>
                 {channel.blog && (
                   <div className="tooltip" data-tip={`${channel.name} Blog`}>
-                    <Link to={channel.blog}>
+                    <Link
+                      to={channel.blog}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       {channel.blog.includes('tistory') ? (
                         <SiTistory className="w-4 h-4" />
                       ) : channel.blog.includes('naver') ? (
@@ -68,6 +77,17 @@ const Footer = () => {
                       ) : (
                         <SiVelog className="w-5 h-5 text-[#12B886]" />
                       )}
+                    </Link>
+                  </div>
+                )}
+                {channel.notion && (
+                  <div className="tooltip" data-tip={`${channel.name} Notion`}>
+                    <Link
+                      to={channel.notion}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <SiNotion className="w-5 h-5" />
                     </Link>
                   </div>
                 )}
