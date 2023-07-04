@@ -19,7 +19,7 @@ const SignLayout = ({ children }: SignLayoutProps) => {
             alt="일러스트"
           />
         </div>
-        <div className="relative max-md:absolute top-0 left-0 right-0 bottom-0 bg-white max-md:bg-inherit backdrop-filter backdrop-blur-sm flex-1 ">
+        <div className="relative max-md:absolute top-0 left-0 right-0 bottom-0 bg-white max-md:bg-inherit flex-1 ">
           {children}
         </div>
       </div>
