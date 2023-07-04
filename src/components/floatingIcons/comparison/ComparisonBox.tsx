@@ -38,6 +38,12 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
     )
       localStorage.clear();
     else {
+    if (
+      lastTimeStamp &&
+      JSON.parse(lastTimeStamp) !== getDateFormat(new Date())
+    )
+      localStorage.clear();
+    else {
       if (selectedRooms) {
         const parsedData = JSON.parse(selectedRooms);
         setSelectedRooms(parsedData);
@@ -47,6 +53,7 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
         const parsedData = JSON.parse(selectedAcc);
         setSelectedAcc(parsedData);
       }
+    }
     }
   }, []);
 

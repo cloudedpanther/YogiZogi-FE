@@ -1,28 +1,38 @@
-import { Github, Notion } from '../logo';
+import { BsGithub } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
+import { SiNaver, SiTistory, SiNotion } from 'react-icons/si';
+import { SiVelog } from 'react-icons/si';
 
 const channels = [
   {
-    name: 'Github',
-    url: 'https://github.com/orgs/YOGIZOGI-Zerobase-2023/repositories',
-    logo: (
-      <Github
-        width={22}
-        height={22}
-        fill={'fill-gray-400 hover:fill-gray-500'}
-      />
-    )
+    name: 'YogiZogi',
+    notion: 'https://www.notion.so/YOGIZOGI-fd26b4d3490b431e8753780ebad4b6fc',
+    github: 'https://github.com/orgs/YOGIZOGI-Zerobase-2023/repositories'
   },
   {
-    name: 'Notion',
-    url: 'https://jet-enquiry-8e3.notion.site/YOGIZOGI-fd26b4d3490b431e8753780ebad4b6fc',
-    logo: (
-      <Notion
-        width={22}
-        height={22}
-        fill={'fill-gray-400 hover:fill-gray-500'}
-      />
-    )
+    name: '고영준',
+    blog: 'https://blog.naver.com/cloudedpanther',
+    github: 'https://github.com/cloudedpanther'
+  },
+  {
+    name: '김은정',
+    blog: 'https://premubo.tistory.com/',
+    github: 'https://github.com/Ryomi-j'
+  },
+  {
+    name: '박성은',
+    blog: 'https://velog.io/@bbung',
+    github: 'https://github.com/bbung95'
+  },
+  {
+    name: '왕석현',
+    blog: 'https://velog.io/@wsh096',
+    github: 'https://github.com/wsh096'
+  },
+  {
+    name: '강민지',
+    blog: 'https://pumkinni.tistory.com/',
+    github: 'https://github.com/pumkinni'
   }
 ];
 
@@ -36,19 +46,51 @@ const Footer = () => {
         minWidth: '375px'
       }}
     >
-      <div className="w-full max-w-5xl flex flex-col md:flex-row justify-center md:justify-between items-center px-8">
-        <p className="text-gray-500 order-2 md:order-1 text-xs">
-          &copy; 2023 Yogizogi All Rights Reserved.
-        </p>
-        <div className="flex gap-8 order-1 md:order-2 mb-4 md:mb-0">
+      <div className="w-full h-full max-w-5xl flex flex-col md:flex-row justify-center md:justify-between items-center px-4">
+        <div className="flex items-center justify-center w-full h-full">
           {channels.map((channel) => {
             return (
               <div
                 key={channel.name}
-                className="tooltip"
-                data-tip={channel.name}
+                className="flex w-full justify-center items-center gap-2"
               >
-                <Link to={channel.url}>{channel.logo}</Link>
+                <div className="tooltip" data-tip={`${channel.name} Github`}>
+                  <Link
+                    to={channel.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <BsGithub className="w-5 h-5 " />
+                  </Link>
+                </div>
+                {channel.blog && (
+                  <div className="tooltip" data-tip={`${channel.name} Blog`}>
+                    <Link
+                      to={channel.blog}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {channel.blog.includes('tistory') ? (
+                        <SiTistory className="w-4 h-4" />
+                      ) : channel.blog.includes('naver') ? (
+                        <SiNaver className="w-4 h-4 text-[#03c75a]" />
+                      ) : (
+                        <SiVelog className="w-5 h-5 text-[#12B886]" />
+                      )}
+                    </Link>
+                  </div>
+                )}
+                {channel.notion && (
+                  <div className="tooltip" data-tip={`${channel.name} Notion`}>
+                    <Link
+                      to={channel.notion}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <SiNotion className="w-5 h-5" />
+                    </Link>
+                  </div>
+                )}
               </div>
             );
           })}

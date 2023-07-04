@@ -67,7 +67,7 @@ const SignIn = () => {
             onClick={handleKakaoSignIn}
           >
             <img
-              src="https://yogizogi-zerobase-2023.github.io/FE/assets/icons/kakaoicon.png"
+              src="/assets/icons/kakaoicon.png"
               alt="카카오 로고"
               className="w-8 h-8"
             />

@@ -53,7 +53,7 @@ const useSignIn = () => {
 
   const handleKakaoSignIn = () => {
     location.href =
-      'https://kauth.kakao.com/oauth/authorize?client_id=32665db00eb9aef9b6b5246fc2a2e8b4&redirect_uri=https://13.209.131.228:8443/api/user/kakao-login&response_type=code';
+      'https://kauth.kakao.com/oauth/authorize?client_id=32665db00eb9aef9b6b5246fc2a2e8b4&redirect_uri=http://13.209.131.228:8080/api/user/kakao-login&response_type=code';
   };
 
   useEffect(() => {

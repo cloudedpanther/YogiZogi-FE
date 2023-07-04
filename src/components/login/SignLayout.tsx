@@ -15,7 +15,7 @@ const SignLayout = ({ children }: SignLayoutProps) => {
           <img
             className="absolute bottom-0 left-0"
             style={{ maxHeight: '50%' }}
-            src="https://yogizogi-zerobase-2023.github.io/FE/assets/images/signin.png"
+            src="/assets/images/signin.png"
             alt="일러스트"
           />
         </div>
