@@ -156,14 +156,6 @@ export const DraggableAccommodationList = ({
                                 data={comparisonData[idx]}
                               />
                             )}
-                            {el.roomName && (
-                              <p className="truncate">{el.roomName}</p>
-                            )}
-                            {comparisonData[idx] && (
-                              <PriceComparisonChart
-                                data={comparisonData[idx]}
-                              />
-                            )}
                             <p className="flex justify-center gap-1">
                               {addCommasToPrice(el.price)}원
                               {el.price === minPrice && (
