@@ -1,4 +1,5 @@
 import { ISearchResultContent } from 'api/search';
+import { addCommasToPrice } from '../../../helpers';
 
 interface FacilityDetailMarkerProps {
   info: ISearchResultContent;
@@ -9,8 +10,6 @@ const FacilityDetailMarker = ({
   info,
   handleOnClick
 }: FacilityDetailMarkerProps) => {
-  const formatPrice = info.price.toLocaleString('kr');
-
   return (
     <div
       className="cursor-pointer absolute bottom-full mb-2 w-72 h-72 rounded-2xl drop-shadow-md bg-white z-50 max-sm:hidden"
@@ -49,7 +48,7 @@ const FacilityDetailMarker = ({
         </div>
         <div className="flex justify-between gap-2">
           <span className="text-sm truncate">{info.address}</span>
-          <span className="font-normal text-sm">₩{formatPrice}</span>
+          <span className="font-normal text-sm">{addCommasToPrice(info.price)}원</span>
         </div>
       </div>
     </div>

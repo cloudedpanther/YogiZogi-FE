@@ -165,7 +165,7 @@ const FacilityDetailBox = ({
           </div>
           <div className="flex justify-between gap-2">
             <span className="font-normal text-md">
-              ₩{addCommasToPrice(info.price)}
+              {addCommasToPrice(info.price)}원
             </span>
             <span className="flex items-center text-md">
               <svg
