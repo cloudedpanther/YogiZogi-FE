@@ -168,6 +168,7 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
+
                   deleteSelectedAcc(idx);
                 }}
                 className="badge badge-neutral badge-sm mt-1 mr-1 w-3 text-white"
