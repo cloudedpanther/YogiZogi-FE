@@ -27,17 +27,17 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
 
   useEffect(() => {
     const selectedRooms = localStorage.getItem('selectedRoom');
-      const selectedAcc = localStorage.getItem('selectedAccommodation');
+    const selectedAcc = localStorage.getItem('selectedAccommodation');
 
-      if (selectedRooms) {
-        const parsedData = JSON.parse(selectedRooms);
-        setSelectedRooms(parsedData);
-      }
+    if (selectedRooms) {
+      const parsedData = JSON.parse(selectedRooms);
+      setSelectedRooms(parsedData);
+    }
 
-      if (selectedAcc) {
-        const parsedData = JSON.parse(selectedAcc);
-        setSelectedAcc(parsedData);
-      }
+    if (selectedAcc) {
+      const parsedData = JSON.parse(selectedAcc);
+      setSelectedAcc(parsedData);
+    }
   }, []);
 
   if (source === 'room') {
@@ -148,7 +148,10 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
                 <p>{addCommasToPrice(el.price)}원</p>
               </div>
               <button
-                onClick={() => deleteSelectedAcc(idx)}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  deleteSelectedAcc(idx);
+                }}
                 className="badge badge-neutral badge-sm mt-1 mr-1 w-3 text-white"
               >
                 ✕

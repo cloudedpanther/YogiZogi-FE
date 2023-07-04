@@ -1,10 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { GetGeoInfo } from '../../utils/getGeoInfo';
 import { getDateFormat, getMonthDayFormat } from '../../utils/handleDate';
-import './SearchBar.css';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { BsPinMap } from 'react-icons/bs';
-import { useNavigate } from 'react-router-dom';
 import { AlertModal } from '../../components/common/AlertModal';
 import { Calendar } from './Calendar';
 
@@ -52,6 +49,7 @@ export const SearchBar = () => {
   });
 
   const [dateContent, setDateContent] = useState('');
+  const [calendarState, setCalendarState] = useState(false);
   const [alertModalState, setAlertModalState] = useState(false);
   const [modalContent, setModalContent] = useState('');
 
@@ -155,15 +153,10 @@ export const SearchBar = () => {
             <img src="./assets/icons/calendar.svg" alt="calendar icon" />
             <span>기간</span>
           </div>
-          <label
-            htmlFor="calendar"
-            className="cursor-pointer"
-          >
-            {dateContent !== ''
-              ? dateContent
-              : '날짜 선택하기'}
-          </label>
-          <Calendar search={search} handleSearchState={handleSearchState} />
+          <div className="cursor-pointer" onClick={() => setCalendarState(true)}>
+            {dateContent !== '' && !calendarState ? dateContent : '날짜 선택하기'}
+          </div>
+          <Calendar search={search} handleSearchState={handleSearchState} calendarState={calendarState} setCalendarState={setCalendarState}/>
         </div>
         <div className="flex flex-col gap-2 sm:w-1/4">
           <div className="flex items-center font-semibold gap-1 text-lg">
@@ -200,7 +193,9 @@ export const SearchBar = () => {
             onClick={handleSearch}
           >
             <img src="./assets/icons/search.svg" alt="search icon" />
-            <span className="hidden lg:block text-lg text-white font-normal">검색</span>
+            <span className="hidden lg:block text-lg text-white font-normal">
+              검색
+            </span>
           </button>
         </div>
       </div>
