@@ -73,7 +73,11 @@ const Nav = () => {
               to="/"
               className="cursor-pointer w-fit text-xl font-bold flex gap-2"
             >
-              <img src="/assets/logos/72.png" alt="YogiZogi" className="w-8" />
+              <img
+                src="/assets/logos/72.png"
+                alt="YogiZogi logo"
+                className="w-8"
+              />
               <p>YogiZogi</p>
             </Link>
           </div>

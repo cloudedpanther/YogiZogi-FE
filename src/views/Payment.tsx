@@ -104,7 +104,7 @@ const Payment = () => {
             <img
               src={roomInfoRef.current.roomImg}
               className="w-full"
-              alt="방 이미지"
+              alt={`${roomInfoRef.current.accommodationName} room image`}
             />
           </div>
           <div className="flex flex-col gap-1 pt-6">

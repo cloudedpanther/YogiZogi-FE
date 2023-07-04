@@ -20,7 +20,7 @@ const FacilityDetailMarker = ({
         <img
           className="w-full h-full object-cover"
           src={info.picUrl}
-          alt="이미지"
+          alt={`${info.accommodationName} image`}
         />
         <div className="absolute top-0 left-0 right-0 bottom-0 rounded-2xl bg-black opacity-30"></div>
       </div>

@@ -153,7 +153,7 @@ const FacilityDetailBox = ({
           <img
             className="w-full h-full object-cover"
             src={info.picUrl}
-            alt="이미지"
+            alt={`${info.accommodationName} image`}
           />
         </div>
         <div className="w-[calc(100%-128px)] flex flex-col justify-between p-3">
