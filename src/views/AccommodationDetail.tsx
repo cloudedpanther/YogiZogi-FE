@@ -59,7 +59,7 @@ const AccommodationDetail = () => {
         setRoomData((prev) => ({
           ...prev,
           accommodationName,
-          accommodationId: id,
+          accommodationId: accommodationId,
           rate,
           people,
           address
