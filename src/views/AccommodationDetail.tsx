@@ -33,14 +33,14 @@ const AccommodationDetail = () => {
 
   const [roomData, setRoomData] = useState<IReservationConfirm>({
     accommodationName: '',
-    accommodationId: '',
+    accommodationId: accommodationId,
     roomId: '',
     roomName: '',
     address: '',
     checkInDate: checkInDate,
     checkOutDate: checkOutDate,
     rate: 0,
-    people: '',
+    people: people,
     price: '',
     imgUrl: ''
   });
