@@ -15,6 +15,12 @@ interface IRoomInfo {
   setRoomData: React.Dispatch<React.SetStateAction<IReservationConfirm>>;
   roomData: IReservationConfirm;
 }
+/**
+ * @param roomInfo: IRoomResponse[];
+ * @param setModalProps: React.Dispatch<React.SetStateAction<IModalProps>>;
+ * @param setRoomData: React.Dispatch<React.SetStateAction<IReservationConfirm>>;
+ * @param roomData: IReservationConfirm;
+ */
 
 export const RoomInfo = ({
   roomInfo,
@@ -31,6 +37,7 @@ export const RoomInfo = ({
   const { accommodationId, checkInDate, checkOutDate, people } =
     getQueryStrData();
 
+  // 비교함에 상품을 추가하는 함수
   const addRoomComparisonCart = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     item: IRoomResponse
@@ -56,6 +63,7 @@ export const RoomInfo = ({
     }
   };
 
+  // 4개 이상의 상품이 담기면 alert 모달의 띄움
   useEffect(() => {
     if (selectedRooms.length > 3) {
       setSelectedRooms(selectedRooms.slice(0, 3));
@@ -117,6 +125,7 @@ export const RoomInfo = ({
                   </div>
                   <div className="flex flex-row sm:w-1/3 justify-center">
                     <div className="flex sm:flex-col gap-3 my-auto items-center">
+                      {/* 가격 버튼을 클릭하면 사용자가 예약을 정말 실행할지 확인하기 위해 ConfirmModal이 띄워짐 */}
                       <button
                         className="flex gap-2 btn btn-sm font-semibold w-fit sm:w-full min-w-[80px] md:min-w-[100px] md:btn-md md:text-base bg-red-500 disabled:bg-base-300 hover:bg-red-600 text-white"
                         onClick={() => {
