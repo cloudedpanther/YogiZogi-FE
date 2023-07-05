@@ -81,7 +81,7 @@ export const DraggableAccommodationList = ({
           <ul
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className="flex gap-1 p-1 text-center w-full justify-center text-xs md:text-base"
+            className="flex gap-1 justify-center items-center p-1 text-center text-xs md:text-base"
           >
             {!isLoading &&
               selectedItemInfo.length > 0 &&
