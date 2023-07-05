@@ -111,7 +111,7 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
 
   saveComparisonData();
 
-  // 28일 간격 3개의 날짜 반환
+  // 28일 간격 3개의 날짜 반환(차트에 쓰일 3개의 check in/out date를 반환)
   const getThreeDates = (day: string) => {
     const startDate = new Date(`2023-07-${day}`);
     let days = [];
@@ -127,7 +127,6 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
 
   // 데이터 fetching
   // Promise.all()을 사용해, 모든 데이터를 받아왔을 때, comparisonItems 상태 업데이트
-
   const fetchDataForItem = (items: IComparisonBoxProps[]) => {
     let checkInDays: string[], checkOutDays: string[];
     let fetchUrl: string[][] = [];
@@ -270,6 +269,7 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
       {!isLoading && (
         <ComparisonModal
           data={comparisonItems}
+          source={source}
           modalState={comparisonModalState}
           handleModal={setComparisonModalState}
           isLoading={isLoading}
