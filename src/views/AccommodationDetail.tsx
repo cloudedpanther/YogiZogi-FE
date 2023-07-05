@@ -16,12 +16,14 @@ import { Review } from '../components/accommodationDetail/Review';
 import { AccommodationInfo } from '../components/accommodationDetail/AccommodationInfo';
 import './AccommodationDetail.css';
 import { FloatingIcon } from '../components/floatingIcons/FloatingIcon';
+import { getQueryStrData } from '../utils/handleQueryString';
 
 const AccommodationDetail = () => {
   const [accommodationData, setAccommodationData] =
     useState<IAccommodationDetailResponse>(AccommodationDetailInitData);
 
-  const [page, setPage] = useState(0);
+  const { accommodationId, checkInDate, checkOutDate, people } =
+    getQueryStrData();
 
   const [modalProps, setModalProps] = useState<IModalProps>({
     imgList: [],
@@ -29,29 +31,16 @@ const AccommodationDetail = () => {
     selectedImg: 0
   });
 
-  const accommodationId =
-    window.location.hash.match(/\/accommodation\/(\d+)/) || '';
-  const id = accommodationId[1];
-
-  const urlParams = new URLSearchParams(
-    '?' + window.location.hash.split('?')[1]
-  );
-  const {
-    checkindate: checkInDate,
-    checkoutdate: checkOutDate,
-    people
-  } = Object.fromEntries(urlParams.entries());
-
   const [roomData, setRoomData] = useState<IReservationConfirm>({
     accommodationName: '',
     accommodationId: '',
     roomId: '',
     roomName: '',
     address: '',
-    rate: 0,
     checkInDate: checkInDate,
     checkOutDate: checkOutDate,
-    people: people,
+    rate: 0,
+    people: '',
     price: '',
     imgUrl: ''
   });
@@ -59,7 +48,7 @@ const AccommodationDetail = () => {
   useEffect(() => {
     fetchData
       .get(
-        `/accommodation/${id}?checkindate=${checkInDate}&checkoutdate=${checkOutDate}&people=${people}`
+        `/accommodation/${accommodationId}?checkindate=${checkInDate}&checkoutdate=${checkOutDate}&people=${people}`
       )
       .then((res: any) => {
         res.data.data.rooms = res.data.data.rooms.filter(
@@ -74,7 +63,8 @@ const AccommodationDetail = () => {
           people,
           address
         }));
-      });
+      })
+      .catch(() => {});
   }, []);
 
   return (
@@ -175,12 +165,7 @@ const AccommodationDetail = () => {
           </div>
         </div>
         <div className="divider" />
-        <Review
-          id={id}
-          accommodationData={accommodationData}
-          page={page}
-          setPage={setPage}
-        />
+        <Review id={accommodationId} accommodationData={accommodationData} />
       </section>
       <FloatingIcon />
       <CarouselModal
