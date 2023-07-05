@@ -8,9 +8,9 @@ import {
   IRoomResponse
 } from '../api/accommodationDetail';
 import {
-  CarouselModal,
-  IModalProps
-} from '../components/accommodationDetail/CarouselModal';
+  ImageCarouselModal,
+  IImageCarouselModal
+} from '../components/accommodationDetail/ImageCarouselModal';
 import { RoomInfo } from '../components/accommodationDetail/RoomInfo';
 import { Review } from '../components/accommodationDetail/Review';
 import { AccommodationInfo } from '../components/accommodationDetail/AccommodationInfo';
@@ -25,7 +25,7 @@ const AccommodationDetail = () => {
   const { accommodationId, checkInDate, checkOutDate, people } =
     getQueryStrData();
 
-  const [modalProps, setModalProps] = useState<IModalProps>({
+  const [modalProps, setModalProps] = useState<IImageCarouselModal>({
     imgList: [],
     alt: '',
     selectedImg: 0
@@ -168,7 +168,7 @@ const AccommodationDetail = () => {
         <Review id={accommodationId} accommodationData={accommodationData} />
       </section>
       <FloatingIcon />
-      <CarouselModal
+      <ImageCarouselModal
         imgList={modalProps.imgList}
         alt={modalProps.alt}
         selectedImg={modalProps.selectedImg}

@@ -2,7 +2,7 @@ import { IReservationConfirm, IRoomResponse } from 'api/accommodationDetail';
 import { addCommasToPrice } from '../../helpers';
 import { ConfirmModal } from './ConfirmModal';
 import { useEffect, useState } from 'react';
-import { IModalProps } from './CarouselModal';
+import { IImageCarouselModal } from './ImageCarouselModal';
 import { useRecoilState } from 'recoil';
 import { selectedRoom } from '../../store/atom/comparisonAtom';
 import { AlertModal } from '../../components/common/AlertModal';
@@ -11,13 +11,13 @@ import { getQueryStrData } from '../../utils/handleQueryString';
 
 interface IRoomInfo {
   roomInfo: IRoomResponse[];
-  setModalProps: React.Dispatch<React.SetStateAction<IModalProps>>;
+  setModalProps: React.Dispatch<React.SetStateAction<IImageCarouselModal>>;
   setRoomData: React.Dispatch<React.SetStateAction<IReservationConfirm>>;
   roomData: IReservationConfirm;
 }
 /**
  * @param roomInfo: IRoomResponse[];
- * @param setModalProps: React.Dispatch<React.SetStateAction<IModalProps>>;
+ * @param setModalProps: React.Dispatch<React.SetStateAction<IImageCarouselModal>>;
  * @param setRoomData: React.Dispatch<React.SetStateAction<IReservationConfirm>>;
  * @param roomData: IReservationConfirm;
  */
