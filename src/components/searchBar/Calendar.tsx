@@ -3,14 +3,26 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/esm/locale';
 import { SearchProps } from './SearchBar';
 import './Calendar.css';
+import { useState } from 'react';
 
+export const Calendar = ({
+  handleSearchState
+}: {
+  handleSearchState: Function;
+}) => {
+  const [startDate, setStartDate] = useState<Date | null>(new Date());
+  const [endDate, setEndDate] = useState<Date | null>(null);
 
-interface ICalendar {
-  search: SearchProps,
-  handleSearchState: Function,
-}
+  const onChange = (dates: [Date | null, Date | null] | null) => {
+    if (dates) {
+      const [start, end] = dates;
+      handleSearchState('checkInDate', start);
+      handleSearchState('checkOutDate', end);
+      setStartDate(start);
+      setEndDate(end);
+    }
+  };
 
-export const Calendar = ({search, handleSearchState} : ICalendar) => {
   return (
     <>
       <input type="checkbox" id="calendar" className="modal-toggle" />
@@ -21,35 +33,16 @@ export const Calendar = ({search, handleSearchState} : ICalendar) => {
               <span className="font-semibold">체크인</span>
               <DatePicker
                 locale={ko}
-                inline
+                selected={startDate}
+                onChange={onChange}
                 minDate={new Date(2023, 6, 1)}
-                maxDate={new Date(2023, 8, 30)}
-                selected={search.checkInDate}
-                closeOnScroll={true}
-                onChange={(date: Date) => {
-                  if (search.checkOutDate)
-                    handleSearchState('checkOutDate', new Date());
-                  handleSearchState('checkInDate', date);
-                }}
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <span className="font-semibold">체크아웃</span>
-              <DatePicker
-                locale={ko}
-                inline
-                minDate={new Date(search.checkInDate.getTime() + 86400000)}
                 maxDate={new Date(2023, 9, 1)}
-                selected={search.checkOutDate}
+                startDate={startDate}
+                endDate={endDate}
+                selectsRange
+                inline
+                showDisabledMonthNavigation
                 closeOnScroll={true}
-                onChange={(date: Date) => {
-                  if (
-                    !search.checkInDate ||
-                    search.checkInDate.getTime() >= date.getTime()
-                  )
-                    return;
-                  handleSearchState('checkOutDate', date);
-                }}
               />
             </div>
           </div>
