@@ -47,7 +47,6 @@ const useAuth = () => {
    * token의 만료기간을 체크하여 로그아웃 및 리다이렉트
    */
   useEffect(() => {
-    console.log(authUser);
     if (authUser.token) {
       if (!authUser.expiration) {
         handleLogout();
