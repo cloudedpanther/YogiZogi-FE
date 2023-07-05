@@ -6,6 +6,7 @@ import { selectedAccommodation } from '../../store/atom/comparisonAtom';
 import { AlertModal } from '../../components/common/AlertModal';
 import { addCommasToPrice } from '../../helpers';
 import { IComparisonBoxProps } from '../../components/floatingIcons/comparison/types';
+import { getQueryStrData } from '../../utils/handleQueryString';
 
 interface IAccommodationPreview {
   data: ISearchResultContent;
@@ -30,12 +31,17 @@ const AccommodationPreview = ({ data }: IAccommodationPreview) => {
     )
       setAlertModalState(true);
     else {
+      const { checkInDate, checkOutDate, people } =
+        getQueryStrData();
       const comparisonData = {
         accommodationName: data.accommodationName,
         accommodationId: data.id.toString(),
         roomId: 0,
+        checkInDate: checkInDate,
+        checkOutDate: checkOutDate,
         price: data.price,
-        imgUrl: data.picUrl
+        imgUrl: data.picUrl,
+        people: people
       };
       setComparisonItems((prev) => [...prev, comparisonData]);
     }
@@ -68,7 +74,11 @@ const AccommodationPreview = ({ data }: IAccommodationPreview) => {
           </button>
         </div>
         <div className="flex items-center gap-2 text-sm row-start-3 row-end-4 col-start-1 col-end-4">
-        <img src="./assets/icons/location.svg" alt="destination icon" className="text-red-500 text-2xl shrink-0"/>
+          <img
+            src="./assets/icons/location.svg"
+            alt="destination icon"
+            className="text-red-500 text-2xl shrink-0"
+          />
           <p className="truncate">{address}</p>
         </div>
         <div className="row-start-3 row-end-4 col-start-4 col-end-6 flex items-center justify-end">
