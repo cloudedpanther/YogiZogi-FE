@@ -3,6 +3,9 @@ ChartJS.register(...registerables);
 import { Line } from 'react-chartjs-2';
 import { IComparisonItem } from './types';
 
+/**
+ * @param data : IComparisonItem[]
+*/
 export const PriceComparisonChart = ({ data }: { data: IComparisonItem[] }) => {
   const datas = {
     labels: ['Jul', 'Aug', 'Sep'],
