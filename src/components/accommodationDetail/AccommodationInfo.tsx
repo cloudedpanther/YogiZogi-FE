@@ -3,7 +3,6 @@ import RatingStars from '../../components/common/RatingStars';
 
 /** 
  * @param accommodationData: IAccommodationDetailResponse
-}
 **/
 
 export const AccommodationInfo = ({
