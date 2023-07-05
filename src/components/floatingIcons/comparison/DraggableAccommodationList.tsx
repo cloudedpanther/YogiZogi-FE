@@ -8,60 +8,53 @@ import { useCallback, useEffect, useState } from 'react';
 import { addCommasToPrice } from '../../../helpers';
 import RatingStars from '../../common/RatingStars';
 import { useNavigate } from 'react-router-dom';
-import { IComparisonItem, IComparisonResponse } from './types';
-import { fetchData } from '../../../api';
+import { IComparisonItem } from './types';
 import { PriceComparisonChart } from './PriceComparisonChart';
+import { useRecoilValue } from 'recoil';
+import {
+  selectedAccommodation,
+  selectedRoom
+} from '../../../store/atom/comparisonAtom';
 
+/**
+ * @param data IComparisonItem[][][]
+ */
+
+// 비교모달 내 각 상품의 section
 export const DraggableAccommodationList = ({
-  data
+  data,
+  isLoading
 }: {
-  data: IComparisonItem[];
+  data: IComparisonItem[][];
+  isLoading: boolean;
+  setIsLoading: any;
 }) => {
+  const selectedRooms = useRecoilValue(selectedRoom);
+  const selectedAcc = useRecoilValue(selectedAccommodation);
+  const [selectedItemInfo, setSelectedItemInfo] =
+    useState<IComparisonItem[][]>(data);
+
   const navigate = useNavigate();
-  const [comparisonData, setComparisonData] = useState([...data]);
-  const [selectedItemInfo, setSelectedItemInfo] = useState<
-    IComparisonResponse[]
-  >([]);
 
-  const minPrice = Math.min(...selectedItemInfo.map((el) => el.price));
-  const highRate = Math.max(...selectedItemInfo.map((el) => el.rate));
+  const highRate = Math.max(
+    ...selectedItemInfo.map((el) => (el.length > 0 ? Number(el[0].rate) : 0)),
+    0
+  );
 
-  const hasConveniences = selectedItemInfo.some((el) => el.convenience === '');
+  const roomPrice = selectedRooms.map((el) => Number(el.price));
+  const accommodationPrice = selectedAcc.map((el) => Number(el.price));
 
-  const fetchDataForItem = (el: any) => {
-    const fetchUrl =
-      el.roomId === '0'
-        ? `/accommodation/compare/accommodation?accommodationid=${el.accommodationId}&checkindate=${el.checkInDate}&checkoutdate=${el.checkOutDate}&people=${el.people}`
-        : `/accommodation/compare/room?roomid=${el.roomId}&checkindate=${el.checkInDate}&checkoutdate=${el.checkOutDate}&people=${el.people}`;
-
-    return fetchData
-      .get(fetchUrl)
-      .then((res: any) => {
-        return {
-          ...res.data.data,
-          accommodationId: el.accommodationId,
-          checkInDate: el.checkInDate,
-          checkOutDate: el.checkOutDate,
-          people: el.people
-        };
-      })
-      .catch(() => {});
-  };
+  // 선택된 상품들 모두 편의시설 정보를 가지고 있는지 확인
+  // 모든 아이템이 편의시설 정보를 가지고 있을때만, 비교모달에서 편의시설 정보 렌더링
+  const hasConveniences = selectedItemInfo.some(
+    (el) => el[0] && el[0].convenience === ''
+  );
 
   useEffect(() => {
-    const fetchDataForAllItems = async () => {
-      const promises = data.map((el) => fetchDataForItem(el));
-      try {
-        const results = await Promise.all(promises);
-        setSelectedItemInfo(results);
-      } catch {
-        setSelectedItemInfo([]);
-      }
-    };
-    setComparisonData([...data]);
-    fetchDataForAllItems();
-  }, [data]);
+    setSelectedItemInfo(data)
+  }, [data])
 
+  // DnD에서 drop 이벤트가 발생했을 때 실행 - selectedItemInfo 배열 재정렬
   const onDragEnd = useCallback(
     (result: DropResult) => {
       const { destination, source } = result;
@@ -81,13 +74,8 @@ export const DraggableAccommodationList = ({
         selectedItemInfo[source.index]
       );
       setSelectedItemInfo(updatedselectedItemInfo);
-
-      const updatedData = Array.from(comparisonData);
-      updatedData.splice(source.index, 1);
-      updatedData.splice(destination.index, 0, comparisonData[source.index]);
-      setComparisonData(updatedData);
     },
-    [selectedItemInfo, setSelectedItemInfo]
+    [selectedItemInfo]
   );
 
   return (
@@ -97,16 +85,16 @@ export const DraggableAccommodationList = ({
           <ul
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className="flex gap-1 p-1 text-center w-full justify-center text-xs md:text-base"
+            className="flex gap-1 justify-center p-1 text-center text-xs md:text-base"
           >
-            {selectedItemInfo.length > 0 &&
+            {!isLoading &&
+              selectedItemInfo.length > 0 &&
               selectedItemInfo.map((el, idx) => {
+                const source = el[0].roomName ? 'room' : 'accommodation';
+
+                if (el[0] === undefined) return null;
                 return (
-                  <Draggable
-                    draggableId={el.id.toString() + idx}
-                    index={idx}
-                    key={el.id.toString() + idx}
-                  >
+                  <Draggable draggableId={idx.toString()} index={idx} key={idx}>
                     {(provided, snapshot) => (
                       <>
                         <li
@@ -141,43 +129,39 @@ export const DraggableAccommodationList = ({
                                 · · ·
                               </div>
                               <img
-                                src={el.picUrl}
-                                alt={`${el.accommodationName} image`}
+                                src={el[0].picUrl}
+                                alt={`${el[0].accommodationName} image`}
                                 className="w-full h-full rounded-lg"
                               />
                             </figure>
                             <p className="truncate block font-semibold mr-1">
-                              {el.accommodationName}
+                              {el[0].accommodationName}
                             </p>
-                            {el.roomName && (
-                              <p className="truncate">{el.roomName}</p>
+                            {source === 'room' && (
+                              <p className="truncate">{el[0].roomName}</p>
                             )}
-                            {comparisonData[idx] && (
-                              <PriceComparisonChart
-                                data={comparisonData[idx]}
-                              />
-                            )}
-                            {el.roomName && (
-                              <p className="truncate">{el.roomName}</p>
-                            )}
-                            {comparisonData[idx] && (
-                              <PriceComparisonChart
-                                data={comparisonData[idx]}
-                              />
-                            )}
+                            <PriceComparisonChart
+                              data={selectedItemInfo[idx]}
+                            />
                             <p className="flex justify-center gap-1">
-                              {addCommasToPrice(el.price)}원
-                              {el.price === minPrice && (
+                              {source === 'room'
+                                ? addCommasToPrice(roomPrice[idx])
+                                : addCommasToPrice(accommodationPrice[idx])}
+                              원
+                              {(source === 'room' &&
+                                roomPrice[idx] === Math.min(...roomPrice)) ||
+                              (source === 'accommodation' &&
+                                roomPrice[idx] === Math.min(...roomPrice)) ? (
                                 <img
                                   src="https://em-content.zobj.net/thumbs/320/google/350/red-heart_2764-fe0f.png"
                                   alt="heart mark"
                                   className="w-4 md:h-5 md:pt-1"
                                 />
-                              )}
+                              ) : null}
                             </p>
                             <div className="flex items-center justify-center gap-1 h-4 md:h-6 ">
-                              <RatingStars rate={el.rate} />
-                              {el.rate === highRate && (
+                              <RatingStars rate={el[0].rate} />
+                              {el[0].rate === highRate && (
                                 <img
                                   src="https://em-content.zobj.net/thumbs/320/google/350/red-heart_2764-fe0f.png"
                                   alt="heart mark"
@@ -185,7 +169,7 @@ export const DraggableAccommodationList = ({
                                 />
                               )}
                             </div>
-                            <p className="truncate">{el.address}</p>
+                            <p className="truncate">{el[0].address}</p>
                             {!hasConveniences && (
                               <details
                                 id="comparisonFacility"
@@ -194,16 +178,22 @@ export const DraggableAccommodationList = ({
                               >
                                 <summary className="cursor-pointer">
                                   {`${
-                                    el.convenience.split(',').length
+                                    el[0].convenience.split(',').length
                                   }개의 편의시설`}
                                 </summary>
-                                <div className="text-xs">{el.convenience}</div>
+                                <div className="text-xs">
+                                  {el[0].convenience}
+                                </div>
                               </details>
                             )}
                             <button
                               onClick={() => {
+                                const sourceData =
+                                  source === 'accommodation'
+                                    ? selectedAcc[idx]
+                                    : selectedRooms[idx];
                                 navigate(
-                                  `/accommodation/${el.accommodationId}?checkindate=${el.checkInDate}&checkoutdate=${el.checkOutDate}&people=${el.people}`
+                                  `/accommodation/${sourceData.accommodationId}?checkindate=${sourceData.checkInDate}&checkoutdate=${sourceData.checkOutDate}&people=${sourceData.people}`
                                 );
                                 location.reload();
                               }}

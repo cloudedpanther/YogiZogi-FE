@@ -8,6 +8,12 @@ interface IConfirmModal {
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+/**
+ * @param data IReservationConfirm;
+ * @param modalState boolean;
+ * @param setModalState React.Dispatch<React.SetStateAction<boolean>>;
+ */
+
 export const ConfirmModal = ({
   data,
   modalState,
@@ -64,7 +70,7 @@ export const ConfirmModal = ({
               <div>
                 <p>
                   <span className="font-semibold">체크인: </span>
-                  {data.checkOutDate}
+                  {data.checkInDate}
                 </p>
                 <p>
                   <span className="font-semibold">체크아웃</span>:{' '}

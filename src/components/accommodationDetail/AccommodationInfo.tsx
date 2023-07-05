@@ -1,6 +1,10 @@
 import { IAccommodationDetailResponse } from '../../api/accommodationDetail';
 import RatingStars from '../../components/common/RatingStars';
 
+/** 
+ * @param accommodationData: IAccommodationDetailResponse
+**/
+
 export const AccommodationInfo = ({
   accommodationData
 }: {

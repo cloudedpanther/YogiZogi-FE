@@ -8,49 +8,38 @@ import {
   IRoomResponse
 } from '../api/accommodationDetail';
 import {
-  CarouselModal,
-  IModalProps
-} from '../components/accommodationDetail/CarouselModal';
+  ImageCarouselModal,
+  IImageCarouselModal
+} from '../components/accommodationDetail/ImageCarouselModal';
 import { RoomInfo } from '../components/accommodationDetail/RoomInfo';
 import { Review } from '../components/accommodationDetail/Review';
 import { AccommodationInfo } from '../components/accommodationDetail/AccommodationInfo';
 import './AccommodationDetail.css';
 import { FloatingIcon } from '../components/floatingIcons/FloatingIcon';
+import { getQueryStrData } from '../utils/handleQueryString';
 
 const AccommodationDetail = () => {
   const [accommodationData, setAccommodationData] =
     useState<IAccommodationDetailResponse>(AccommodationDetailInitData);
 
-  const [page, setPage] = useState(0);
+  const { accommodationId, checkInDate, checkOutDate, people } =
+    getQueryStrData();
 
-  const [modalProps, setModalProps] = useState<IModalProps>({
+  const [modalProps, setModalProps] = useState<IImageCarouselModal>({
     imgList: [],
     alt: '',
     selectedImg: 0
   });
 
-  const accommodationId =
-    window.location.hash.match(/\/accommodation\/(\d+)/) || '';
-  const id = accommodationId[1];
-
-  const urlParams = new URLSearchParams(
-    '?' + window.location.hash.split('?')[1]
-  );
-  const {
-    checkindate: checkInDate,
-    checkoutdate: checkOutDate,
-    people
-  } = Object.fromEntries(urlParams.entries());
-
   const [roomData, setRoomData] = useState<IReservationConfirm>({
     accommodationName: '',
-    accommodationId: '',
+    accommodationId: accommodationId,
     roomId: '',
     roomName: '',
     address: '',
-    rate: 0,
     checkInDate: checkInDate,
     checkOutDate: checkOutDate,
+    rate: 0,
     people: people,
     price: '',
     imgUrl: ''
@@ -59,7 +48,7 @@ const AccommodationDetail = () => {
   useEffect(() => {
     fetchData
       .get(
-        `/accommodation/${id}?checkindate=${checkInDate}&checkoutdate=${checkOutDate}&people=${people}`
+        `/accommodation/${accommodationId}?checkindate=${checkInDate}&checkoutdate=${checkOutDate}&people=${people}`
       )
       .then((res: any) => {
         res.data.data.rooms = res.data.data.rooms.filter(
@@ -70,12 +59,13 @@ const AccommodationDetail = () => {
         setRoomData((prev) => ({
           ...prev,
           accommodationName,
-          accommodationId: id,
+          accommodationId: accommodationId,
           rate,
           people,
           address
         }));
-      });
+      })
+      .catch(() => {});
   }, []);
 
   return (
@@ -176,15 +166,10 @@ const AccommodationDetail = () => {
           </div>
         </div>
         <div className="divider" />
-        <Review
-          id={id}
-          accommodationData={accommodationData}
-          page={page}
-          setPage={setPage}
-        />
+        <Review id={accommodationId} accommodationData={accommodationData} />
       </section>
       <FloatingIcon />
-      <CarouselModal
+      <ImageCarouselModal
         imgList={modalProps.imgList}
         alt={modalProps.alt}
         selectedImg={modalProps.selectedImg}

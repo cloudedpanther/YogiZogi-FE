@@ -57,7 +57,7 @@ export const SearchBar = () => {
 
   useEffect(() => {
     if (
-      search.checkOutDate.toString().slice(0, 15) !==
+      search.checkOutDate && search.checkOutDate.toString().slice(0, 15) !==
       new Date().toString().slice(0, 15)
     ) {
       setDateContent(() => {
@@ -156,7 +156,7 @@ export const SearchBar = () => {
             <div className="cursor-pointer" onClick={() => setCalendarState(true)}>
             {dateContent !== '' && !calendarState ? dateContent : '날짜 선택하기'}
           </div>
-          <Calendar search={search} handleSearchState={handleSearchState} calendarState={calendarState} setCalendarState={setCalendarState}/>
+          <Calendar handleSearchState={handleSearchState} calendarState={calendarState} setCalendarState={setCalendarState}/>
         </div>
         <div className="flex flex-col gap-2 sm:w-1/4">
           <div className="flex items-center font-semibold gap-1 text-lg">
