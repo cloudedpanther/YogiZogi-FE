@@ -9,6 +9,12 @@ export interface IModalProps {
   selectedImg: number
 }
 
+/**
+ * @param imgList: IPicUrlList[];
+ * @param alt: string;
+ * @param selectedImg: number
+*/
+
 export const CarouselModal: React.FC<IModalProps> = ({ imgList, alt, selectedImg }) => {
   return (
     <>
