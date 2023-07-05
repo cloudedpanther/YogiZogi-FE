@@ -21,7 +21,7 @@ interface IComparisonBox {
 
 /**
  * @param display boolean, 비교함이 띄워질지 여부
- * @param source string, 페이지 source ('room' or 'accommodation')
+ * @param source string, page source ('room' or 'accommodation')
  */
 
 export const ComparisonBox = ({ display, source }: IComparisonBox) => {
@@ -267,8 +267,6 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
           source={source}
           modalState={comparisonModalState}
           handleModal={setComparisonModalState}
-          isLoading={isLoading}
-          setIsLoading={setIsLoading}
         />
       )}
       <AlertModal
