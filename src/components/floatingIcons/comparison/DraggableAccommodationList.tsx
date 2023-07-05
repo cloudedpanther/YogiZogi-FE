@@ -16,6 +16,19 @@ import {
   selectedRoom
 } from '../../../store/atom/comparisonAtom';
 
+/**
+ * @param data IComparisonItem[][][] : {
+  accommodationName: string;
+  roomName: string;
+  address: string;
+  convenience: string;
+  id: number;
+  picUrl: string;
+  price: number;
+  rate: number;
+}
+ */
+// 비교모달 내 각 상품의 section
 export const DraggableAccommodationList = ({
   data,
   isLoading
@@ -39,10 +52,13 @@ export const DraggableAccommodationList = ({
   const roomPrice = selectedRooms.map((el) => Number(el.price));
   const accommodationPrice = selectedAcc.map((el) => Number(el.price));
 
+  // 선택된 상품들 모두 편의시설 정보를 가지고 있는지 확인
+  // 모든 아이템이 편의시설 정보를 가지고 있을때만, 비교모달에서 편의시설 정보 렌더링
   const hasConveniences = selectedItemInfo.some(
     (el) => el[0] && el[0].convenience === ''
   );
 
+  // DnD에서 drop 이벤트가 발생했을 때 실행 - selectedItemInfo 배열 재정렬
   const onDragEnd = useCallback(
     (result: DropResult) => {
       const { destination, source } = result;
