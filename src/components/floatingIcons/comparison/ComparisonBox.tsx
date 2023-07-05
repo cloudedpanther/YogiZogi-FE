@@ -10,6 +10,9 @@ import { AlertModal } from '../../common/AlertModal';
 import { ComparisonModal } from './ComparisonModal';
 import { getDateFormat, getSlashDateFormat } from '../../../utils/handleDate';
 import { IComparisonBoxProps, IComparisonItem } from './types';
+import { fetchData } from '../../../api';
+import { AxiosResponse } from 'axios';
+import { getQueryStrData } from '../../../utils/handleQueryString';
 
 interface IComparisonBox {
   display: boolean;
@@ -19,11 +22,18 @@ interface IComparisonBox {
 export const ComparisonBox = ({ display, source }: IComparisonBox) => {
   let data: IComparisonBoxProps[],
     setData: SetterOrUpdater<IComparisonBoxProps[]>;
-  const [alertModalState, setAlertModalState] = useState(false);
-  const [comparisonModalState, setComparisonModalState] = useState(false);
-  const [comparisonItems, setComparisonItems] = useState<IComparisonItem[]>([]);
+
   const [selectedRooms, setSelectedRooms] = useRecoilState(selectedRoom);
   const [selectedAcc, setSelectedAcc] = useRecoilState(selectedAccommodation);
+
+  const [alertModalState, setAlertModalState] = useState(false);
+  const [comparisonModalState, setComparisonModalState] = useState(false);
+  const [comparisonItems, setComparisonItems] = useState<IComparisonItem[][]>(
+    []
+  );
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const lastTimeStamp = localStorage.getItem('lastTimeStamp');
@@ -56,38 +66,8 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
     setData = setSelectedAcc;
   }
 
-  const navigate = useNavigate();
-  const urlParams = new URLSearchParams(
-    '?' + window.location.hash.split('?')[1]
-  );
-
-  const {
-    checkindate: checkInDate,
-    checkoutdate: checkOutDate,
-    people: people
-  } = Object.fromEntries(urlParams.entries());
-
-  const handleComparison = () => {
-    if (data.length < 2) setAlertModalState(true);
-    else {
-      const comparisonData = data.map((el) => {
-        return {
-          accommodationId: el.accommodationId,
-          roomId: el.roomId.toString(),
-          checkInDate: checkInDate,
-          checkOutDate: checkOutDate,
-          people: people
-        };
-      });
-      setComparisonItems(comparisonData);
-      setComparisonModalState(true);
-    }
-  };
-
-  const deleteSelectedAcc = (idx: number) => {
-    const newItems = data.filter((_, i) => i !== idx);
-    setData(newItems);
-  };
+  const { accommodationId, checkInDate, checkOutDate, people } =
+    getQueryStrData();
 
   const saveComparisonData = () => {
     const handleBeforeUnload = () => {
@@ -116,6 +96,89 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
   };
 
   saveComparisonData();
+
+  const getThreeDates = (day: string) => {
+    const startDate = new Date(`2023-07-${day}`);
+    let days = [];
+
+    for (let i = 0; i < 3; i++) {
+      const currentDate = new Date(
+        startDate.getTime() + i * 28 * 24 * 60 * 60 * 1000
+      );
+      days.push(getDateFormat(currentDate));
+    }
+    return days;
+  };
+
+  const fetchDataForItem = () => {
+    let checkInDays: string[], checkOutDays: string[];
+    let fetchUrl: string[][] = [];
+
+    data.forEach((item) => {
+      let itemUrls: string[] = [];
+
+      const checkInDates = checkInDate.split('-').pop();
+      const checkOutDates = checkOutDate.split('-').pop();
+
+      checkInDays = getThreeDates(checkInDates!);
+      checkOutDays = getThreeDates(checkOutDates!);
+
+      checkInDays.forEach((el, idx) => {
+        itemUrls.push(
+          item.roomId === undefined || item.roomId === 0
+            ? `/accommodation/compare/accommodation?accommodationid=${item.accommodationId}&checkindate=${el}&checkoutdate=${checkOutDays[idx]}&people=${people}`
+            : `/accommodation/compare/room?roomid=${item.roomId}&checkindate=${el}&checkoutdate=${checkOutDays[idx]}&people=${people}`
+        );
+      });
+      fetchUrl.push(itemUrls);
+    });
+
+    let response: Promise<AxiosResponse>[][] = [];
+    fetchUrl.map((urls) => {
+      let urlArr: Promise<AxiosResponse>[] = [];
+      urls.forEach((url) => {
+        urlArr.push(
+          fetchData.get<AxiosResponse>(url) as Promise<AxiosResponse>
+        );
+      });
+      response.push(urlArr);
+    });
+    return response;
+  };
+
+  const handleComparison = () => {
+    if (data.length < 2) setAlertModalState(true);
+    else {
+      const fetchDataForAllItems = () => {
+        const promises = fetchDataForItem();
+        return Promise.all<Promise<AxiosResponse[]>[]>(
+          promises.map((promiseArr) => Promise.all(promiseArr)) as Promise<
+            AxiosResponse[]
+          >[]
+        )
+          .then((results) => {
+            setComparisonItems([
+              ...results.map((x) => x.map((y) => y.data ? y.data.data : {}))
+            ]);
+          })
+          .then(() => {
+            setComparisonModalState(true);
+            setIsLoading(false);
+          });
+      };
+      if (comparisonItems.length === 0) {
+        setIsLoading(true);
+        fetchDataForAllItems();
+      } else {
+        setComparisonModalState(true);
+      }
+    }
+  };
+
+  const deleteSelectedAcc = (idx: number) => {
+    const newItems = data.filter((_, i) => i !== idx);
+    setData(newItems);
+  };
 
   return (
     <article
@@ -183,11 +246,15 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
           </button>
         </div>
       </div>
-      <ComparisonModal
-        data={comparisonItems}
-        modalState={comparisonModalState}
-        handleModal={setComparisonModalState}
-      />
+      {!isLoading && (
+        <ComparisonModal
+          data={comparisonItems}
+          modalState={comparisonModalState}
+          handleModal={setComparisonModalState}
+          isLoading={isLoading}
+          setIsLoading={setIsLoading}
+        />
+      )}
       <AlertModal
         content="최소 2개의 상품을 담아주세요!"
         modalState={alertModalState}
