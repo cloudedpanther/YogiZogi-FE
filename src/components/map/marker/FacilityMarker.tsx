@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import FacilityDetailMarker from './FacilityDetailMarker';
 import { PositionProps } from 'api/map';
 import { ISearchResultContent } from '../../../api/search';
+import { addCommasToPrice } from '../../../helpers';
 
 interface FacilityMarkerProps {
   info: ISearchResultContent;
@@ -18,7 +19,6 @@ const FacilityMarker = ({
 }: FacilityMarkerProps) => {
   const [isShow, setIsShow] = useState<boolean>(isActive);
   const { id, price, lat, lon } = info;
-  const formatPrice = price.toLocaleString('kr');
 
   const handleMarkerClick = () => {
     handleOnClickMove({ lat, lng: lon }, id);
@@ -34,7 +34,7 @@ const FacilityMarker = ({
         className="cursor-pointer px-4 py-1 rounded-lg bg-white text-center drop-shadow-md hover:scale-105 transition-all"
         onClick={handleMarkerClick}
       >
-        <span>₩{formatPrice}</span>
+        <span>{addCommasToPrice(price)}원</span>
       </div>
       {isShow && (
         <FacilityDetailMarker info={info} handleOnClick={handleOnClick} />
