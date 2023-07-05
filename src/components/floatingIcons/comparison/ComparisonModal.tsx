@@ -2,15 +2,19 @@ import { IComparisonItem } from './types';
 import { DraggableAccommodationList } from './DraggableAccommodationList';
 
 interface IComparisonModal {
-  data: IComparisonItem[];
+  data: IComparisonItem[][];
   modalState: boolean;
   handleModal: React.Dispatch<React.SetStateAction<boolean>>;
+  isLoading: boolean;
+  setIsLoading: any;
 }
 
 export const ComparisonModal = ({
   data,
   modalState,
-  handleModal
+  handleModal,
+  isLoading,
+  setIsLoading
 }: IComparisonModal) => {
   return (
     <>
@@ -28,7 +32,11 @@ export const ComparisonModal = ({
               한 눈에 비교하기
             </h2>
             <div className="flex w-full">
-              <DraggableAccommodationList data={data} />
+              <DraggableAccommodationList
+                data={data}
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
+              />
             </div>
           </div>
           <div className="modal-action">
