@@ -1,6 +1,23 @@
 import { IAccommodationDetailResponse } from '../../api/accommodationDetail';
 import RatingStars from '../../components/common/RatingStars';
 
+/** 
+ * @param accommodationData: {
+  id: number;
+  accommodationName: string;
+  category: number;
+  rate: number;
+  address: string;
+  region: string;
+  picUrlList: IPicUrlList[];
+  convenienceList: {}[];
+  info: string;
+  lat: number;
+  lon: number;
+  rooms: IRoomResponse[];
+}
+**/
+
 export const AccommodationInfo = ({
   accommodationData
 }: {
