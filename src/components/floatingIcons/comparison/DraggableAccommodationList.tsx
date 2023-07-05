@@ -142,6 +142,7 @@ export const DraggableAccommodationList = ({
                               </div>
                               <img
                                 src={el.picUrl}
+                                alt={`${el.accommodationName} image`}
                                 className="w-full h-full rounded-lg"
                               />
                             </figure>

@@ -20,8 +20,10 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
   let data: IComparisonBoxProps[],
     setData: SetterOrUpdater<IComparisonBoxProps[]>;
   const [alertModalState, setAlertModalState] = useState(false);
+
   const [comparisonModalState, setComparisonModalState] = useState(false);
   const [comparisonItems, setComparisonItems] = useState<IComparisonItem[]>([]);
+
   const [selectedRooms, setSelectedRooms] = useRecoilState(selectedRoom);
   const [selectedAcc, setSelectedAcc] = useRecoilState(selectedAccommodation);
 
@@ -30,6 +32,12 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
     const selectedRooms = localStorage.getItem('selectedRoom');
     const selectedAcc = localStorage.getItem('selectedAccommodation');
 
+    if (
+      lastTimeStamp &&
+      JSON.parse(lastTimeStamp) !== getDateFormat(new Date())
+    )
+      localStorage.clear();
+    else {
     if (
       lastTimeStamp &&
       JSON.parse(lastTimeStamp) !== getDateFormat(new Date())
@@ -45,6 +53,7 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
         const parsedData = JSON.parse(selectedAcc);
         setSelectedAcc(parsedData);
       }
+    }
     }
   }, []);
 
@@ -168,7 +177,6 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-
                   deleteSelectedAcc(idx);
                 }}
                 className="badge badge-neutral badge-sm mt-1 mr-1 w-3 text-white"
