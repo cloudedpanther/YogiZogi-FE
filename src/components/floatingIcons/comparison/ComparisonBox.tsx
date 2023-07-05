@@ -101,7 +101,6 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
         );
       }
     };
-
     window.addEventListener('beforeunload', handleBeforeUnload);
 
     return () => {
@@ -184,12 +183,8 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
           });
       };
 
-      if (comparisonItems.length === 0) {
-        setIsLoading(true);
-        fetchDataForAllItems();
-      } else {
-        setComparisonModalState(true);
-      }
+      setIsLoading(true);
+      fetchDataForAllItems();
     }
   };
 
