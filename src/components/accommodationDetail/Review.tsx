@@ -11,6 +11,10 @@ interface IReview {
   id: string;
   accommodationData: IAccommodationDetailResponse;
 }
+/**
+ * @param id accommodation Id(string),
+ * @param accommodationData IAccommodationDetailResponse: 
+*/
 
 export const Review = ({ id, accommodationData }: IReview) => {
   const [page, setPage] = useState(0);
