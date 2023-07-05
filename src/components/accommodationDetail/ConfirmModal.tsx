@@ -8,6 +8,12 @@ interface IConfirmModal {
   setModalState: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+/**
+ * @param data IReservationConfirm;
+ * @param modalState boolean;
+ * @param setModalState React.Dispatch<React.SetStateAction<boolean>>;
+ */
+
 export const ConfirmModal = ({
   data,
   modalState,
