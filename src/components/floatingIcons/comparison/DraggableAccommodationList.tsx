@@ -60,10 +60,6 @@ export const DraggableAccommodationList = ({
     (el) => el[0] && el[0].convenience === ''
   );
 
-  useEffect(() => {
-    setSelectedItemInfo(data);
-  }, [data]);
-
   // DnD에서 drop 이벤트가 발생했을 때 실행 - selectedItemInfo 배열 재정렬
   const onDragEnd = useCallback(
     (result: DropResult) => {
