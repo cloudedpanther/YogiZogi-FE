@@ -7,6 +7,7 @@ import { useRecoilState } from 'recoil';
 import { selectedRoom } from '../../store/atom/comparisonAtom';
 import { AlertModal } from '../../components/common/AlertModal';
 import { IComparisonBoxProps } from 'components/floatingIcons/comparison/types';
+import { getQueryStrData } from '../../utils/handleQueryString';
 
 interface IRoomInfo {
   roomInfo: IRoomResponse[];
@@ -22,10 +23,13 @@ export const RoomInfo = ({
   roomData
 }: IRoomInfo) => {
   const [modalContent, setModalContent] = useState('');
-  const [modalState, setModalState] = useState(false);
-  const [alertModalState, setAlertModalState] = useState(false);
+  const [confirmModalState, setConfirmModalState] = useState(false); // 예약 실행 여부를 확인하는 모달
+  const [alertModalState, setAlertModalState] = useState(false); // 비교함에 담긴 상품이 1개 이하 4개 이상일 때 띄워지는 모달
   const [selectedRooms, setSelectedRooms] =
     useRecoilState<IComparisonBoxProps[]>(selectedRoom);
+
+  const { accommodationId, checkInDate, checkOutDate, people } =
+    getQueryStrData();
 
   const addRoomComparisonCart = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
@@ -39,10 +43,13 @@ export const RoomInfo = ({
     } else {
       const comparisonData = {
         accommodationName: roomData.accommodationName,
-        accommodationId: roomData.accommodationId,
+        accommodationId: accommodationId,
         roomId: item.id,
+        checkInDate: checkInDate,
+        checkOutDate: checkOutDate,
         price: item.price,
-        imgUrl: item.pictureUrlList[0].url
+        imgUrl: item.pictureUrlList[0].url,
+        people: people
       };
 
       setSelectedRooms((prev) => [...prev, comparisonData]);
@@ -120,7 +127,7 @@ export const RoomInfo = ({
                             imgUrl: el.pictureUrlList[0].url,
                             price: el.price.toString()
                           }));
-                          setModalState(true);
+                          setConfirmModalState(true);
                         }}
                         disabled={el.price === null}
                       >
@@ -136,8 +143,8 @@ export const RoomInfo = ({
                       </button>
                       <ConfirmModal
                         data={roomData}
-                        modalState={modalState}
-                        setModalState={setModalState}
+                        modalState={confirmModalState}
+                        setModalState={setConfirmModalState}
                       />
                     </div>
                   </div>
