@@ -176,7 +176,7 @@ export const DraggableAccommodationList = ({
                                 className="bg-base-200 px-1 rounded-lg"
                                 open
                               >
-                                <summary className="cursor-pointer">
+                                <summary className="cursor-pointer after:top-1.3 after:w-2 after:h-2">
                                   {`${
                                     el[0].convenience.split(',').length
                                   }개의 편의시설`}
