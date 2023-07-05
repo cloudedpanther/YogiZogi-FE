@@ -76,7 +76,7 @@ export const Review = ({ id, accommodationData }: IReview) => {
             <div className="flex items-center text-xl md:text-3xl text-center">
               <div className="my-5 w-1/3 p-2">
                 <span className="font-semibold text-red-500">
-                  {accommodationData && accommodationData.rate}
+                  {accommodationData && (accommodationData.rate).toFixed(1)}
                 </span>{' '}
                 / 10 점
               </div>
