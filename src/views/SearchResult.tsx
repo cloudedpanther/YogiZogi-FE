@@ -37,7 +37,6 @@ import { useRecoilState } from 'recoil';
 import { selectedAccommodation } from '../store/atom/comparisonAtom';
 
 const SearchResult = () => {
-  // 숙소 비교 관련 코드
   const [selectedAcc, setSelectedAcc] = useRecoilState(selectedAccommodation);
   const [modalState, setModalState] = useState(false);
 
@@ -311,7 +310,6 @@ const SearchResult = () => {
     hideObserver();
   }, [isLoading]);
 
-  // 비교함에 상품이 3개 이상일때, 초기 3개의 상품만 반환
   useEffect(() => {
     if (selectedAcc.length > 3) {
       setSelectedAcc(selectedAcc.slice(0, 3));
