@@ -70,7 +70,7 @@ export const ConfirmModal = ({
               <div>
                 <p>
                   <span className="font-semibold">체크인: </span>
-                  {data.checkOutDate}
+                  {data.checkInDate}
                 </p>
                 <p>
                   <span className="font-semibold">체크아웃</span>:{' '}
