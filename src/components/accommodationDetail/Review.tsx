@@ -10,11 +10,12 @@ import { fetchData } from '../../api';
 interface IReview {
   id: string;
   accommodationData: IAccommodationDetailResponse;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
-  page: number;
 }
 
-export const Review = ({ id, accommodationData, page, setPage }: IReview) => {
+export const Review = ({ id, accommodationData }: IReview) => {
+  const [page, setPage] = useState(0);
+  const PageSize = 20;
+
   const rateAdj = [
     'Terrible',
     'Poor',
@@ -27,6 +28,7 @@ export const Review = ({ id, accommodationData, page, setPage }: IReview) => {
     'Outstanding',
     'Perfect'
   ];
+
   const [reviewRes, setReviewRes] = useState<IReviewResponse>({
     content: [],
     totalElements: 0,
@@ -36,26 +38,30 @@ export const Review = ({ id, accommodationData, page, setPage }: IReview) => {
 
   const getReview = async (page: number) => {
     fetchData
-      .get(`/accommodation/${id}/review?page=${page}&pagesize=5`)
-      .then((reviewRes: any) => {
+      .get(`/accommodation/${id}/review?page=${page}&pagesize=${PageSize}`)
+      .then((res: any) => {
         setReviewRes({
-          content: reviewRes.data.data.content,
-          totalElements: reviewRes.data.totalElements || 0,
-          totalPages: reviewRes.data.totalPages || 0
+          content: res.data.data.content,
+          totalElements: res.data.data.totalElements,
+          totalPages: res.data.data.totalPages
         });
         setReviewArr((prev) => {
           const newReviewArr: IReviewContent[] = [...prev];
-          newReviewArr[page] = reviewRes.data.data.content;
+          newReviewArr.push(res.data.data.content);
           return newReviewArr;
         });
-      });
+      })
+      .catch(() => []);
+  };
+
+  const handleReviewPageButton = (page: number) => {
+    setPage(page);
+    if (!reviewArr[page]) getReview(page);
   };
 
   useEffect(() => {
-    (async () => {
-      if (!reviewArr[page]) getReview(page);
-    })();
-  }, [page]);
+    getReview(page);
+  }, []);
 
   return (
     <>
@@ -84,34 +90,35 @@ export const Review = ({ id, accommodationData, page, setPage }: IReview) => {
           </div>
           <div className="divider" />
           <div>
-            {Object.values(reviewArr[page]).map((el, idx) => {
-              return (
-                <div
-                  key={idx}
-                  className="flex flex-col gap-3 p-3 border rounded-lg mb-5 text-xs md:text-base"
-                >
-                  <p className="font-semibold">{el.nickName}</p>
-                  <div className="flex flex-col sm:flex-row gap-4 text-xs md:text-base font-medium">
-                    <div className="flex items-center gap-2 font-semibold">
-                      평점 : <RatingStars rate={el.rating} />
+            {reviewArr[page] &&
+              Object.values(reviewArr[page]).map((el, idx) => {
+                return (
+                  <div
+                    key={idx}
+                    className="flex flex-col gap-3 p-3 border rounded-lg mb-5 text-xs md:text-base"
+                  >
+                    <p className="font-semibold">{el.nickName}</p>
+                    <div className="flex flex-col sm:flex-row gap-4 text-xs md:text-base font-medium">
+                      <div className="flex items-center gap-2 font-semibold">
+                        평점 : <RatingStars rate={el.rating} />
+                      </div>
                     </div>
+                    <p> {el.description}</p>
                   </div>
-                  <p> {el.description}</p>
-                </div>
-              );
-            })}
-            <div className="flex justify-center">
-              {reviewRes &&
+                );
+              })}
+            <div className="flex justify-center items-center">
+              {reviewRes.totalPages > 0 &&
                 new Array(reviewRes.totalPages).fill(0).map((_, idx) => {
                   return (
                     <div key={idx} className="join">
                       <input
                         aria-label={(idx + 1).toString()}
-                        className="join-item btn btn-square btn-ghost btn-sm mr-1 checked:bg-red-500 checked:text-white border-none important"
+                        className="join-item btn btn-square rounded-md btn-sm mr-1 checked:bg-red-500 checked:text-white border-none important"
                         type="radio"
                         name="options"
                         checked={page === idx}
-                        onChange={() => setPage(idx)}
+                        onChange={() => handleReviewPageButton(idx)}
                       />
                     </div>
                   );
