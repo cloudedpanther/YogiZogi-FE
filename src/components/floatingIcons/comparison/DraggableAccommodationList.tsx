@@ -62,30 +62,43 @@ export const DraggableAccommodationList = ({
 
   // DnD에서 drop 이벤트가 발생했을 때 실행 - selectedItemInfo 배열 재정렬
   const onDragEnd = useCallback(
-    (result: DropResult) => {
+    (result: DropResult, _comparisonFactor: IComparisonFactor) => {
       const { destination, source } = result;
 
-      if (!destination) return;
+      if (!destination) {
+        return;
+      }
       if (
         destination.droppableId === source.droppableId &&
-        source.index === destination.index
-      )
+        source.index === destination.index &&
+        _comparisonFactor.itemPrices.length <= 0
+      ) {
         return;
+      }
+      const updatedSelectedItemInfo = Array.from([...selectedItemInfo]);
+      const movedItem = updatedSelectedItemInfo[source.index];
+      updatedSelectedItemInfo.splice(source.index, 1);
+      updatedSelectedItemInfo.splice(destination.index, 0, movedItem);
+      setSelectedItemInfo(updatedSelectedItemInfo);
 
-      const updatedselectedItemInfo = Array.from(selectedItemInfo);
-      updatedselectedItemInfo.splice(source.index, 1);
-      updatedselectedItemInfo.splice(
-        destination.index,
-        0,
-        selectedItemInfo[source.index]
-      );
-      setSelectedItemInfo(updatedselectedItemInfo);
+      if (_comparisonFactor.itemPrices.length > 0) {
+        const updatedItemPrice = Array.from(_comparisonFactor.itemPrices);
+        const movedPrice = updatedItemPrice[source.index];
+        updatedItemPrice.splice(source.index, 1);
+        updatedItemPrice.splice(destination.index, 0, movedPrice);
+        setComparisonFactor((prev) => ({
+          ...prev,
+          itemPrices: updatedItemPrice
+        }));
+      }
     },
     [selectedItemInfo]
   );
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
+    <DragDropContext
+      onDragEnd={(result) => onDragEnd(result, comparisonFactor)}
+    >
       <Droppable droppableId="selectedAccommodations" direction="horizontal">
         {(provided) => (
           <ul
