@@ -30,7 +30,7 @@ export const RoomInfo = ({
 }: IRoomInfo) => {
   const [modalContent, setModalContent] = useState('');
   const [confirmModalState, setConfirmModalState] = useState(false); // 예약 실행 여부를 확인하는 모달
-  const [alertModalState, setAlertModalState] = useState(false); // 비교함에 담긴 상품이 1개 이하 4개 이상일 때 띄워지는 모달
+  const [alertModalState, setAlertModalState] = useState(false);
   const [selectedRooms, setSelectedRooms] =
     useRecoilState<IComparisonBoxProps[]>(selectedRoom);
 

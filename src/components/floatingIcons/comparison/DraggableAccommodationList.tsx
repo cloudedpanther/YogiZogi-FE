@@ -17,17 +17,9 @@ import {
 } from '../../../store/atom/comparisonAtom';
 
 /**
- * @param data IComparisonItem[][][] : {
-  accommodationName: string;
-  roomName: string;
-  address: string;
-  convenience: string;
-  id: number;
-  picUrl: string;
-  price: number;
-  rate: number;
-}
+ * @param data IComparisonItem[][][]
  */
+
 // 비교모달 내 각 상품의 section
 export const DraggableAccommodationList = ({
   data,
