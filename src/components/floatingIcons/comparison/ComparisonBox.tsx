@@ -19,6 +19,11 @@ interface IComparisonBox {
   source: string;
 }
 
+/**
+ * @param display boolean, 비교함이 띄워질지 여부
+ * @param source string, 페이지 source (room or 'accommodation')
+ */
+
 export const ComparisonBox = ({ display, source }: IComparisonBox) => {
   let data: IComparisonBoxProps[],
     setData: SetterOrUpdater<IComparisonBoxProps[]>;
@@ -35,6 +40,8 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
 
   const navigate = useNavigate();
 
+  // 페이지가 reload 된 후, 기존 비교함에 있던 정보를 localstorage에서 가져와 recoil로 상태관리
+  // 오늘 비교함에 담은 데이터가 아닌 경우, localstorage를 비워줌
   useEffect(() => {
     const lastTimeStamp = localStorage.getItem('lastTimeStamp');
     const selectedRooms = localStorage.getItem('selectedRoom');
@@ -69,6 +76,7 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
   const { accommodationId, checkInDate, checkOutDate, people } =
     getQueryStrData();
 
+  // 사용자가 현재 페이지를 떠나기 전에 비교함의 상품 데이터를 localstorage에 저장
   const saveComparisonData = () => {
     const handleBeforeUnload = () => {
       const today = getDateFormat(new Date());
@@ -97,6 +105,7 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
 
   saveComparisonData();
 
+  // 28일 간격 3개의 날짜 반환
   const getThreeDates = (day: string) => {
     const startDate = new Date(`2023-07-${day}`);
     let days = [];
@@ -110,6 +119,8 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
     return days;
   };
 
+  // 데이터 fetching
+  // Promise.all()을 사용해, 모든 데이터를 받아왔을 때, comparisonItems 상태 업데이트
   const fetchDataForItem = () => {
     let checkInDays: string[], checkOutDays: string[];
     let fetchUrl: string[][] = [];
@@ -166,6 +177,7 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
             setIsLoading(false);
           });
       };
+      
       if (comparisonItems.length === 0) {
         setIsLoading(true);
         fetchDataForAllItems();
