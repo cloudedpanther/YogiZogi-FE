@@ -8,7 +8,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { addCommasToPrice } from '../../../helpers';
 import RatingStars from '../../common/RatingStars';
 import { useNavigate } from 'react-router-dom';
-import { IComparisonItem } from './types';
+import { IComparisonItem, IComparisonFactor } from './types';
 import { PriceComparisonChart } from './PriceComparisonChart';
 import { useRecoilValue } from 'recoil';
 import {
@@ -23,26 +23,36 @@ import {
 // 비교모달 내 각 상품의 section
 export const DraggableAccommodationList = ({
   data,
-  isLoading
+  source
 }: {
   data: IComparisonItem[][];
-  isLoading: boolean;
-  setIsLoading: any;
+  source: string;
 }) => {
   const selectedRooms = useRecoilValue(selectedRoom);
   const selectedAcc = useRecoilValue(selectedAccommodation);
   const [selectedItemInfo, setSelectedItemInfo] =
     useState<IComparisonItem[][]>(data);
+  const comparisonData = source === 'room' ? selectedRooms : selectedAcc;
+  const [comparisonFactor, setComparisonFactor] = useState<IComparisonFactor>({
+    itemPrices: [],
+    minPrice: 0,
+    highRate: 0
+  });
 
   const navigate = useNavigate();
 
-  const highRate = Math.max(
-    ...selectedItemInfo.map((el) => (el.length > 0 ? Number(el[0].rate) : 0)),
-    0
-  );
+  useEffect(() => {
+    setSelectedItemInfo(data);
 
-  const roomPrice = selectedRooms.map((el) => Number(el.price));
-  const accommodationPrice = selectedAcc.map((el) => Number(el.price));
+    const itemPrices = comparisonData.map((el) => el.price);
+    const minPrice = Math.min(...itemPrices);
+    const highRate = Math.max(...data.map((el) => el[0].rate));
+    setComparisonFactor({
+      itemPrices,
+      minPrice,
+      highRate
+    });
+  }, [data]);
 
   // 선택된 상품들 모두 편의시설 정보를 가지고 있는지 확인
   // 모든 아이템이 편의시설 정보를 가지고 있을때만, 비교모달에서 편의시설 정보 렌더링
@@ -51,8 +61,8 @@ export const DraggableAccommodationList = ({
   );
 
   useEffect(() => {
-    setSelectedItemInfo(data)
-  }, [data])
+    setSelectedItemInfo(data);
+  }, [data]);
 
   // DnD에서 drop 이벤트가 발생했을 때 실행 - selectedItemInfo 배열 재정렬
   const onDragEnd = useCallback(
