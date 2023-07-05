@@ -86,8 +86,8 @@ const ReviewModal = ({ accommodationId, bookId, onClose }: IReviewModal) => {
 
     setErrorMessage('');
 
-    const averageRate = Number(
-      ((rating.service + rating.price + rating.facilities) / 3).toFixed(1)
+    const averageRate = Math.floor(
+      (rating.service + rating.price + rating.facilities) / 3
     );
 
     const newRequestBody = {
