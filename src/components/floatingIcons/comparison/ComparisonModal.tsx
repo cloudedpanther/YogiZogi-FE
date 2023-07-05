@@ -3,10 +3,9 @@ import { DraggableAccommodationList } from './DraggableAccommodationList';
 
 interface IComparisonModal {
   data: IComparisonItem[][];
+  source: string,
   modalState: boolean;
   handleModal: React.Dispatch<React.SetStateAction<boolean>>;
-  isLoading: boolean;
-  setIsLoading: any;
 }
 /**
  * @param data IComparisonItem[]
@@ -16,10 +15,9 @@ interface IComparisonModal {
 
 export const ComparisonModal = ({
   data,
+  source,
   modalState,
-  handleModal,
-  isLoading,
-  setIsLoading
+  handleModal
 }: IComparisonModal) => {
   return (
     <>
@@ -39,8 +37,7 @@ export const ComparisonModal = ({
             <div className="flex justify-center w-full">
               <DraggableAccommodationList
                 data={data}
-                isLoading={isLoading}
-                setIsLoading={setIsLoading}
+                source={source}
               />
             </div>
           </div>
