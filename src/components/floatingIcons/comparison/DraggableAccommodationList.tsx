@@ -146,22 +146,14 @@ export const DraggableAccommodationList = ({
                               원
                               {(source === 'room' &&
                                 roomPrice[idx] === Math.min(...roomPrice)) ||
-                                (source === 'accommodation' &&
-                                  roomPrice[idx] === Math.min(...roomPrice) && (
-                                    <img
-                                      src="https://em-content.zobj.net/thumbs/320/google/350/red-heart_2764-fe0f.png"
-                                      alt="heart mark"
-                                      className="w-4 md:h-5 md:pt-1"
-                                    />
-                                  ))}
-                              {source === 'accommodation' &&
-                                roomPrice[idx] === Math.min(...roomPrice) && (
-                                  <img
-                                    src="https://em-content.zobj.net/thumbs/320/google/350/red-heart_2764-fe0f.png"
-                                    alt="heart mark"
-                                    className="w-4 md:h-5 md:pt-1"
-                                  />
-                                )}
+                              (source === 'accommodation' &&
+                                roomPrice[idx] === Math.min(...roomPrice)) ? (
+                                <img
+                                  src="https://em-content.zobj.net/thumbs/320/google/350/red-heart_2764-fe0f.png"
+                                  alt="heart mark"
+                                  className="w-4 md:h-5 md:pt-1"
+                                />
+                              ) : null}
                             </p>
                             <div className="flex items-center justify-center gap-1 h-4 md:h-6 ">
                               <RatingStars rate={el[0].rate} />

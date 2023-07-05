@@ -15,7 +15,7 @@ const SignIn = () => {
 
   return (
     <SignLayout>
-      <div className="absolute max-w-sm w-full pl-10 pr-10 top-1/2 left-16 -translate-y-1/2 max-lg:left-1/2 max-lg:-translate-x-1/2">
+      <div className="absolute max-w-sm w-full p-10 pr-10 top-1/2 left-16 -translate-y-1/2 max-lg:left-1/2 max-lg:-translate-x-1/2 rounded-xl bg-[#00BB98] bg-opacity-70 md:bg-inherit">
         <h1 className="text-3xl font-bold max-md:text-white">로그인</h1>
         <div className="divider m-0 pt-3 pb-4"></div>
         <div className="flex flex-col text-white">
@@ -67,7 +67,7 @@ const SignIn = () => {
             onClick={handleKakaoSignIn}
           >
             <img
-              src="https://yogizogi-zerobase-2023.github.io/FE/assets/icons/kakaoicon.png"
+              src="/assets/icons/kakaoicon.png"
               alt="카카오 로고"
               className="w-8 h-8"
             />

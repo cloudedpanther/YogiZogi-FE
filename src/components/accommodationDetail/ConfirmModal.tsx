@@ -50,7 +50,11 @@ export const ConfirmModal = ({
         <div className="flex flex-col gap-5 modal-box w-full max-w-2xl shadow-none">
           <div className="flex gap-5">
             <figure className="w-full">
-              <img src={data.imgUrl} className="w-full" />
+              <img
+                src={data.imgUrl}
+                alt={`${data.accommodationName} image`}
+                className="w-full"
+              />
             </figure>
           </div>
           <div>

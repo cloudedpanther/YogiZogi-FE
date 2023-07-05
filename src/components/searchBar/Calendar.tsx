@@ -22,6 +22,20 @@ export const Calendar = ({
       setEndDate(end);
     }
   };
+interface ICalendar {
+  search: SearchProps;
+  handleSearchState: Function;
+  calendarState: boolean;
+  setCalendarState: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const Calendar = ({
+  search,
+  handleSearchState,
+  calendarState,
+  setCalendarState
+}: ICalendar) => {
+  const calendarRef = useRef<HTMLDivElement>(null);
 
   return (
     <>

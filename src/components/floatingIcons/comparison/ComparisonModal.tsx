@@ -36,7 +36,7 @@ export const ComparisonModal = ({
             <h2 className="mb-3 text-2xl font-semibold text-center">
               한 눈에 비교하기
             </h2>
-            <div className="flex w-full">
+            <div className="flex justify-center w-full">
               <DraggableAccommodationList
                 data={data}
                 isLoading={isLoading}

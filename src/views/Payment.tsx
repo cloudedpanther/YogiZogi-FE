@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import RatingStars from '../components/common/RatingStars';
 import InputBox from '../components/login/InputBox';
 import useReservation from '../hooks/useReservation';
+import { addCommasToPrice } from '../helpers';
 
 const Payment = () => {
   const {
@@ -65,9 +66,9 @@ const Payment = () => {
             />
             <ReservationLabel
               title="결제금액"
-              value={`${Number(
+              value={`${addCommasToPrice(Number(
                 accommodationInfoRef.current.price
-              ).toLocaleString('kr')} 원`}
+              ))}원`}
             />
           </div>
           <div className="divider"></div>
@@ -104,7 +105,7 @@ const Payment = () => {
             <img
               src={roomInfoRef.current.roomImg}
               className="w-full"
-              alt="방 이미지"
+              alt={`${roomInfoRef.current.accommodationName} room image`}
             />
           </div>
           <div className="flex flex-col gap-1 pt-6">
