@@ -167,7 +167,7 @@ export const DraggableAccommodationList = ({
                               )}
                             </p>
                             <div className="flex items-center justify-center gap-1 h-4 md:h-6 ">
-                              <RatingStars rate={el.rate} />
+                              <RatingStars rate={Number(el.rate.toFixed(1))} />
                               {el.rate === highRate && (
                                 <img
                                   src="https://em-content.zobj.net/thumbs/320/google/350/red-heart_2764-fe0f.png"
