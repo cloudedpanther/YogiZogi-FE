@@ -8,6 +8,20 @@ interface IComparisonModal {
   isLoading: boolean;
   setIsLoading: any;
 }
+/**
+ * @param data IComparisonItem[] : {
+  accommodationName: string;
+  roomName: string;
+  address: string;
+  convenience: string;
+  id: number;
+  picUrl: string;
+  price: number;
+  rate: number;
+}
+ * @param modalState boolean : 모달의 display 여부
+ * @param handleModal React.SetStateAction<boolean>
+ */
 
 export const ComparisonModal = ({
   data,
