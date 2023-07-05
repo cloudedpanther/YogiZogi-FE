@@ -53,22 +53,22 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
     )
       localStorage.clear();
     else {
-    if (
-      lastTimeStamp &&
-      JSON.parse(lastTimeStamp) !== getDateFormat(new Date())
-    )
-      localStorage.clear();
-    else {
-      if (selectedRooms) {
-        const parsedData = JSON.parse(selectedRooms);
-        setSelectedRooms(parsedData);
-      }
+      if (
+        lastTimeStamp &&
+        JSON.parse(lastTimeStamp) !== getDateFormat(new Date())
+      )
+        localStorage.clear();
+      else {
+        if (selectedRooms) {
+          const parsedData = JSON.parse(selectedRooms);
+          setSelectedRooms(parsedData);
+        }
 
-      if (selectedAcc) {
-        const parsedData = JSON.parse(selectedAcc);
-        setSelectedAcc(parsedData);
+        if (selectedAcc) {
+          const parsedData = JSON.parse(selectedAcc);
+          setSelectedAcc(parsedData);
+        }
       }
-    }
     }
   }, []);
 
@@ -80,8 +80,7 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
     setData = setSelectedAcc;
   }
 
-  const { accommodationId, checkInDate, checkOutDate, people } =
-    getQueryStrData();
+  const { checkInDate, checkOutDate, people } = getQueryStrData();
 
   // 사용자가 현재 페이지를 떠나기 전에 비교함의 상품 데이터를 localstorage에 저장
   const saveComparisonData = () => {
@@ -128,11 +127,12 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
 
   // 데이터 fetching
   // Promise.all()을 사용해, 모든 데이터를 받아왔을 때, comparisonItems 상태 업데이트
-  const fetchDataForItem = () => {
+
+  const fetchDataForItem = (items: IComparisonBoxProps[]) => {
     let checkInDays: string[], checkOutDays: string[];
     let fetchUrl: string[][] = [];
 
-    data.forEach((item) => {
+    items.forEach((item) => {
       let itemUrls: string[] = [];
 
       const checkInDates = checkInDate.split('-').pop();
@@ -168,7 +168,7 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
     if (data.length < 2) setAlertModalState(true);
     else {
       const fetchDataForAllItems = () => {
-        const promises = fetchDataForItem();
+        const promises = fetchDataForItem(data);
         return Promise.all<Promise<AxiosResponse[]>[]>(
           promises.map((promiseArr) => Promise.all(promiseArr)) as Promise<
             AxiosResponse[]
@@ -176,7 +176,7 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
         )
           .then((results) => {
             setComparisonItems([
-              ...results.map((x) => x.map((y) => y.data ? y.data.data : {}))
+              ...results.map((x) => x.map((y) => (y.data ? y.data.data : {})))
             ]);
           })
           .then(() => {
@@ -196,7 +196,9 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
 
   const deleteSelectedAcc = (idx: number) => {
     const newItems = data.filter((_, i) => i !== idx);
+    const newComparisonItems = comparisonItems.filter((_, i) => i !== idx);
     setData(newItems);
+    setComparisonItems(newComparisonItems);
   };
 
   return (

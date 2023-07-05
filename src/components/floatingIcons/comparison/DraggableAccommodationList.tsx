@@ -4,7 +4,7 @@ import {
   Draggable,
   DropResult
 } from 'react-beautiful-dnd';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { addCommasToPrice } from '../../../helpers';
 import RatingStars from '../../common/RatingStars';
 import { useNavigate } from 'react-router-dom';
@@ -50,6 +50,10 @@ export const DraggableAccommodationList = ({
     (el) => el[0] && el[0].convenience === ''
   );
 
+  useEffect(() => {
+    setSelectedItemInfo(data)
+  }, [data])
+
   // DnD에서 drop 이벤트가 발생했을 때 실행 - selectedItemInfo 배열 재정렬
   const onDragEnd = useCallback(
     (result: DropResult) => {
@@ -81,7 +85,7 @@ export const DraggableAccommodationList = ({
           <ul
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className="flex gap-1 justify-center items-center p-1 text-center text-xs md:text-base"
+            className="flex gap-1 justify-center p-1 text-center text-xs md:text-base"
           >
             {!isLoading &&
               selectedItemInfo.length > 0 &&
