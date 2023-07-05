@@ -20,6 +20,11 @@ font {
 
 details summary {
   position: relative;
+  list-style: none;
+}
+
+details > summary::-webkit-details-marker {
+  display: none;
 }
 
 details summary::marker {

@@ -12,18 +12,23 @@ import { useClickOutside } from '../../hooks/useClickOutside';
 export const FloatingIcon = () => {
   const selectedAcc = useRecoilValue(selectedAccommodation);
   const selectedRooms = useRecoilValue(selectedRoom);
+
   const [comparisonState, setComparisonState] = useState(false);
   const [source, setSource] = useState('');
 
-  const floatingIconsRef = useRef<HTMLDivElement>(null)
+  const floatingIconsRef = useRef<HTMLDivElement>(null);
 
   const handleOutsideClick = () => {
-    setComparisonState(false)
-  }
+    setComparisonState(false);
+  };
 
-  useClickOutside(floatingIconsRef, handleOutsideClick)
+  useClickOutside(floatingIconsRef, handleOutsideClick);
+
   return (
-    <div ref={floatingIconsRef} className="fixed bottom-[5%] flex flex-col gap-1 md:gap-5 right-1 sm:right-5 md:right-10 z-20">
+    <div
+      ref={floatingIconsRef}
+      className="fixed bottom-[5%] flex flex-col gap-1 md:gap-5 right-1 sm:right-5 md:right-10 z-20"
+    >
       <div className="indicator">
         <span className="indicator-item badge bg-red-500 text-white w-4 h-4 md:w-6 md:h-6 right-2 top-3 text-[10px] md:text-base border-none">
           {selectedRooms.length}
@@ -51,7 +56,7 @@ export const FloatingIcon = () => {
           onClick={() => {
             if (source === 'accommodation') {
               setComparisonState(false);
-              setSource('')
+              setSource('');
             } else {
               setComparisonState(true);
               setSource('accommodation');
