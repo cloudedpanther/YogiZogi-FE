@@ -3,7 +3,7 @@ import { DraggableAccommodationList } from './DraggableAccommodationList';
 
 interface IComparisonModal {
   data: IComparisonItem[][];
-  source: string,
+  source: string;
   modalState: boolean;
   handleModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -35,10 +35,7 @@ export const ComparisonModal = ({
               한 눈에 비교하기
             </h2>
             <div className="flex justify-center w-full">
-              <DraggableAccommodationList
-                data={data}
-                source={source}
-              />
+              <DraggableAccommodationList data={data} source={source} />
             </div>
           </div>
           <div className="modal-action">

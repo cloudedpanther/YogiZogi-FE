@@ -13,7 +13,6 @@ export interface IComparisonBoxProps {
   people: string;
 }
 
-
 export interface IComparisonItem {
   accommodationName: string;
   roomName: string;
@@ -26,7 +25,7 @@ export interface IComparisonItem {
 }
 
 export interface IComparisonFactor {
-  itemPrices: number[]
-  minPrice: number
-  highRate: number
+  itemPrices: number[];
+  minPrice: number;
+  highRate: number;
 }
