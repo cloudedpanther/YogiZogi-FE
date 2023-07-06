@@ -24,3 +24,9 @@ export interface IComparisonItem {
   price: number;
   rate: number;
 }
+
+export interface IComparisonFactor {
+  itemPrices: number[]
+  minPrice: number
+  highRate: number
+}
