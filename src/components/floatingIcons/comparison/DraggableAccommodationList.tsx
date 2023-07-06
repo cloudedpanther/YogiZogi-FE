@@ -106,12 +106,10 @@ export const DraggableAccommodationList = ({
             {...provided.droppableProps}
             className="flex gap-1 justify-center p-1 text-center text-xs md:text-base"
           >
-            {!isLoading &&
-              selectedItemInfo.length > 0 &&
+            {selectedItemInfo.length > 0 &&
               selectedItemInfo.map((el, idx) => {
-                const source = el[0].roomName ? 'room' : 'accommodation';
-
                 if (el[0] === undefined) return null;
+
                 return (
                   <Draggable draggableId={idx.toString()} index={idx} key={idx}>
                     {(provided, snapshot) => (
@@ -163,24 +161,22 @@ export const DraggableAccommodationList = ({
                               data={selectedItemInfo[idx]}
                             />
                             <p className="flex justify-center gap-1">
-                              {source === 'room'
-                                ? addCommasToPrice(roomPrice[idx])
-                                : addCommasToPrice(accommodationPrice[idx])}
+                              {addCommasToPrice(
+                                comparisonFactor.itemPrices[idx]
+                              )}
                               원
-                              {(source === 'room' &&
-                                roomPrice[idx] === Math.min(...roomPrice)) ||
-                              (source === 'accommodation' &&
-                                roomPrice[idx] === Math.min(...roomPrice)) ? (
+                              {comparisonFactor.itemPrices[idx] ===
+                                comparisonFactor.minPrice && (
                                 <img
                                   src="https://em-content.zobj.net/thumbs/320/google/350/red-heart_2764-fe0f.png"
                                   alt="heart mark"
                                   className="w-4 md:h-5 md:pt-1"
                                 />
-                              ) : null}
+                              )}
                             </p>
                             <div className="flex items-center justify-center gap-1 h-4 md:h-6 ">
                               <RatingStars rate={el[0].rate} />
-                              {el[0].rate === highRate && (
+                              {el[0].rate === comparisonFactor.highRate && (
                                 <img
                                   src="https://em-content.zobj.net/thumbs/320/google/350/red-heart_2764-fe0f.png"
                                   alt="heart mark"
