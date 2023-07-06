@@ -37,7 +37,7 @@ export const RoomInfo = ({
   const { accommodationId, checkInDate, checkOutDate, people } =
     getQueryStrData();
 
-    // 비교함에 상품을 추가하는 함수
+  // 비교함에 상품을 추가하는 함수
   const addRoomComparisonCart = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     item: IRoomResponse

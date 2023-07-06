@@ -10,21 +10,38 @@ import { AlertModal } from '../../common/AlertModal';
 import { ComparisonModal } from './ComparisonModal';
 import { getDateFormat, getSlashDateFormat } from '../../../utils/handleDate';
 import { IComparisonBoxProps, IComparisonItem } from './types';
+import { fetchData } from '../../../api';
+import { AxiosResponse } from 'axios';
+import { getQueryStrData } from '../../../utils/handleQueryString';
 
 interface IComparisonBox {
   display: boolean;
   source: string;
 }
 
+/**
+ * @param display boolean, 비교함이 띄워질지 여부
+ * @param source string, page source ('room' or 'accommodation')
+ */
+
 export const ComparisonBox = ({ display, source }: IComparisonBox) => {
   let data: IComparisonBoxProps[],
     setData: SetterOrUpdater<IComparisonBoxProps[]>;
-  const [alertModalState, setAlertModalState] = useState(false);
-  const [comparisonModalState, setComparisonModalState] = useState(false);
-  const [comparisonItems, setComparisonItems] = useState<IComparisonItem[]>([]);
+
   const [selectedRooms, setSelectedRooms] = useRecoilState(selectedRoom);
   const [selectedAcc, setSelectedAcc] = useRecoilState(selectedAccommodation);
 
+  const [alertModalState, setAlertModalState] = useState(false);
+  const [comparisonModalState, setComparisonModalState] = useState(false);
+  const [comparisonItems, setComparisonItems] = useState<IComparisonItem[][]>(
+    []
+  );
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const navigate = useNavigate();
+
+  // 페이지가 reload 된 후, 기존 비교함에 있던 정보를 localstorage에서 가져와 recoil로 상태관리
+  // 오늘 비교함에 담은 데이터가 아닌 경우, localstorage를 비워줌
   useEffect(() => {
     const lastTimeStamp = localStorage.getItem('lastTimeStamp');
     const selectedRooms = localStorage.getItem('selectedRoom');
@@ -36,14 +53,21 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
     )
       localStorage.clear();
     else {
-      if (selectedRooms) {
-        const parsedData = JSON.parse(selectedRooms);
-        setSelectedRooms(parsedData);
-      }
+      if (
+        lastTimeStamp &&
+        JSON.parse(lastTimeStamp) !== getDateFormat(new Date())
+      )
+        localStorage.clear();
+      else {
+        if (selectedRooms) {
+          const parsedData = JSON.parse(selectedRooms);
+          setSelectedRooms(parsedData);
+        }
 
-      if (selectedAcc) {
-        const parsedData = JSON.parse(selectedAcc);
-        setSelectedAcc(parsedData);
+        if (selectedAcc) {
+          const parsedData = JSON.parse(selectedAcc);
+          setSelectedAcc(parsedData);
+        }
       }
     }
   }, []);
@@ -56,39 +80,9 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
     setData = setSelectedAcc;
   }
 
-  const navigate = useNavigate();
-  const urlParams = new URLSearchParams(
-    '?' + window.location.hash.split('?')[1]
-  );
+  const { checkInDate, checkOutDate, people } = getQueryStrData();
 
-  const {
-    checkindate: checkInDate,
-    checkoutdate: checkOutDate,
-    people: people
-  } = Object.fromEntries(urlParams.entries());
-
-  const handleComparison = () => {
-    if (data.length < 2) setAlertModalState(true);
-    else {
-      const comparisonData = data.map((el) => {
-        return {
-          accommodationId: el.accommodationId,
-          roomId: el.roomId.toString(),
-          checkInDate: checkInDate,
-          checkOutDate: checkOutDate,
-          people: people
-        };
-      });
-      setComparisonItems(comparisonData);
-      setComparisonModalState(true);
-    }
-  };
-
-  const deleteSelectedAcc = (idx: number) => {
-    const newItems = data.filter((_, i) => i !== idx);
-    setData(newItems);
-  };
-
+  // 사용자가 현재 페이지를 떠나기 전에 비교함의 상품 데이터를 localstorage에 저장
   const saveComparisonData = () => {
     const handleBeforeUnload = () => {
       const today = getDateFormat(new Date());
@@ -107,7 +101,6 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
         );
       }
     };
-
     window.addEventListener('beforeunload', handleBeforeUnload);
 
     return () => {
@@ -116,6 +109,91 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
   };
 
   saveComparisonData();
+
+  // 28일 간격 3개의 날짜 반환(차트에 쓰일 3개의 check in/out date를 반환)
+  const getThreeDates = (day: string) => {
+    const startDate = new Date(`2023-07-${day}`);
+    let days = [];
+
+    for (let i = 0; i < 3; i++) {
+      const currentDate = new Date(
+        startDate.getTime() + i * 28 * 24 * 60 * 60 * 1000
+      );
+      days.push(getDateFormat(currentDate));
+    }
+    return days;
+  };
+
+  // 데이터 fetching
+  // Promise.all()을 사용해, 모든 데이터를 받아왔을 때, comparisonItems 상태 업데이트
+  const fetchDataForItem = (items: IComparisonBoxProps[]) => {
+    let checkInDays: string[], checkOutDays: string[];
+    let fetchUrl: string[][] = [];
+
+    items.forEach((item) => {
+      let itemUrls: string[] = [];
+
+      const checkInDates = checkInDate.split('-').pop();
+      const checkOutDates = checkOutDate.split('-').pop();
+
+      checkInDays = getThreeDates(checkInDates!);
+      checkOutDays = getThreeDates(checkOutDates!);
+
+      checkInDays.forEach((el, idx) => {
+        itemUrls.push(
+          item.roomId === undefined || item.roomId === 0
+            ? `/accommodation/compare/accommodation?accommodationid=${item.accommodationId}&checkindate=${el}&checkoutdate=${checkOutDays[idx]}&people=${people}`
+            : `/accommodation/compare/room?roomid=${item.roomId}&checkindate=${el}&checkoutdate=${checkOutDays[idx]}&people=${people}`
+        );
+      });
+      fetchUrl.push(itemUrls);
+    });
+
+    let response: Promise<AxiosResponse>[][] = [];
+    fetchUrl.map((urls) => {
+      let urlArr: Promise<AxiosResponse>[] = [];
+      urls.forEach((url) => {
+        urlArr.push(
+          fetchData.get<AxiosResponse>(url) as Promise<AxiosResponse>
+        );
+      });
+      response.push(urlArr);
+    });
+    return response;
+  };
+
+  const handleComparison = () => {
+    if (data.length < 2) setAlertModalState(true);
+    else {
+      const fetchDataForAllItems = () => {
+        const promises = fetchDataForItem(data);
+        return Promise.all<Promise<AxiosResponse[]>[]>(
+          promises.map((promiseArr) => Promise.all(promiseArr)) as Promise<
+            AxiosResponse[]
+          >[]
+        )
+          .then((results) => {
+            setComparisonItems([
+              ...results.map((x) => x.map((y) => (y.data ? y.data.data : {})))
+            ]);
+          })
+          .then(() => {
+            setComparisonModalState(true);
+            setIsLoading(false);
+          });
+      };
+
+      setIsLoading(true);
+      fetchDataForAllItems();
+    }
+  };
+
+  const deleteSelectedAcc = (idx: number) => {
+    const newItems = data.filter((_, i) => i !== idx);
+    const newComparisonItems = comparisonItems.filter((_, i) => i !== idx);
+    setData(newItems);
+    setComparisonItems(newComparisonItems);
+  };
 
   return (
     <article
@@ -183,11 +261,14 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
           </button>
         </div>
       </div>
-      <ComparisonModal
-        data={comparisonItems}
-        modalState={comparisonModalState}
-        handleModal={setComparisonModalState}
-      />
+      {!isLoading && (
+        <ComparisonModal
+          data={comparisonItems}
+          source={source}
+          modalState={comparisonModalState}
+          handleModal={setComparisonModalState}
+        />
+      )}
       <AlertModal
         content="최소 2개의 상품을 담아주세요!"
         modalState={alertModalState}

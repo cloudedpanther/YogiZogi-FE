@@ -36,9 +36,9 @@ const AccommodationDetail = () => {
     roomId: '',
     roomName: '',
     address: '',
-    rate: 0,
     checkInDate: checkInDate,
     checkOutDate: checkOutDate,
+    rate: 0,
     people: people,
     price: '',
     imgUrl: ''

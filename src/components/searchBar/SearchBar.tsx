@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { GetGeoInfo } from '../../utils/getGeoInfo';
 import { getDateFormat, getMonthDayFormat } from '../../utils/handleDate';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AlertModal } from '../../components/common/AlertModal';
 import { Calendar } from './Calendar';
+import { useClickOutside } from '../../hooks/useClickOutside';
 
 export interface SearchProps {
   searchValue: string;
@@ -113,6 +114,20 @@ export const SearchBar = () => {
     }
   };
 
+  const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
+  const calendarRef = useRef<HTMLDivElement>(null);
+
+  const handleOutsideClick = () => {
+    setCalendarState(false);
+  };
+
+  useClickOutside(calendarRef, handleOutsideClick);
+
   return (
     <section className="relative flex flex-col sm:flex-row gap-5 md:gap-10 border min-w-fit w-auto max-w-4xl p-3 shadow-md mx-auto rounded-lg bg-white">
       <div className="w-full md:w-1/2 flex flex-col gap-1">
@@ -135,6 +150,7 @@ export const SearchBar = () => {
                 handleSearchState('searchValue', '');
               }
             }}
+            onKeyUp={handleKeyUp}
           />
           <img
             src="./assets/icons/location.svg"
@@ -153,10 +169,21 @@ export const SearchBar = () => {
             <img src="./assets/icons/calendar.svg" alt="calendar icon" />
             <span>기간</span>
           </div>
-            <div className="cursor-pointer" onClick={() => setCalendarState(true)}>
-            {dateContent !== '' && !calendarState ? dateContent : '날짜 선택하기'}
+          <div ref={calendarRef}>
+            <div
+              className="cursor-pointer"
+              onClick={() => setCalendarState(true)}
+            >
+              {dateContent !== '' && !calendarState
+                ? dateContent
+                : '날짜 선택하기'}
+            </div>
+            <Calendar
+              handleSearchState={handleSearchState}
+              calendarState={calendarState}
+              setCalendarState={setCalendarState}
+            />
           </div>
-          <Calendar handleSearchState={handleSearchState} calendarState={calendarState} setCalendarState={setCalendarState}/>
         </div>
         <div className="flex flex-col gap-2 sm:w-1/4">
           <div className="flex items-center font-semibold gap-1 text-lg">
