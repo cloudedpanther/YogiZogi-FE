@@ -23,7 +23,7 @@ export const AccommodationInfo = ({
               {accommodationData.address}
             </span>
             <div className="flex items-center gap-1">
-              평점 :<RatingStars rate={accommodationData.rate} />
+              평점 :<RatingStars rate={Number((accommodationData.rate).toFixed(1))} />
             </div>
           </div>
           <article className=" flex flex-col gap-2 text-xs sm:text-sm md:text-base w-full">
