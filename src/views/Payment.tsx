@@ -137,7 +137,7 @@ const Payment = () => {
               </span>{' '}
               {roomInfoRef.current.address}
             </div>
-            <RatingStars rate={Number(roomInfoRef.current.rate)} />
+            <RatingStars rate={Number(roomInfoRef.current.rate.toFixed(1))} />
           </div>
         </article>
       </section>

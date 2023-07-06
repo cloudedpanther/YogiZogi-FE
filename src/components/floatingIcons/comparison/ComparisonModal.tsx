@@ -2,13 +2,20 @@ import { IComparisonItem } from './types';
 import { DraggableAccommodationList } from './DraggableAccommodationList';
 
 interface IComparisonModal {
-  data: IComparisonItem[];
+  data: IComparisonItem[][];
+  source: string;
   modalState: boolean;
   handleModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
+/**
+ * @param data IComparisonItem[]
+ * @param modalState boolean : 모달의 display 여부
+ * @param handleModal React.SetStateAction<boolean>
+ */
 
 export const ComparisonModal = ({
   data,
+  source,
   modalState,
   handleModal
 }: IComparisonModal) => {
@@ -23,12 +30,12 @@ export const ComparisonModal = ({
       />
       <div className="modal">
         <div className="modal-box md:w-[600px] max-w-full h-fit">
-          <div className="overflow-x-auto">
+          <div>
             <h2 className="mb-3 text-2xl font-semibold text-center">
               한 눈에 비교하기
             </h2>
-            <div className="flex w-full">
-              <DraggableAccommodationList data={data} />
+            <div className="flex justify-center w-full">
+              <DraggableAccommodationList data={data} source={source} />
             </div>
           </div>
           <div className="modal-action">
