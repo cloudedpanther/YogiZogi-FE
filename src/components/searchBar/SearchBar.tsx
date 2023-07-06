@@ -113,6 +113,12 @@ export const SearchBar = () => {
     }
   };
 
+  const handleKeyUp = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
   return (
     <section className="relative flex flex-col sm:flex-row gap-5 md:gap-10 border min-w-fit w-auto max-w-4xl p-3 shadow-md mx-auto rounded-lg bg-white">
       <div className="w-full md:w-1/2 flex flex-col gap-1">
@@ -135,6 +141,7 @@ export const SearchBar = () => {
                 handleSearchState('searchValue', '');
               }
             }}
+            onKeyUp={handleKeyUp}
           />
           <img
             src="./assets/icons/location.svg"
