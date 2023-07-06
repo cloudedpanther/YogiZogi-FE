@@ -22,14 +22,13 @@ const AccommodationDetail = () => {
   const [accommodationData, setAccommodationData] =
     useState<IAccommodationDetailResponse>(AccommodationDetailInitData);
 
-  const { accommodationId, checkInDate, checkOutDate, people } =
-    getQueryStrData();
-
   const [modalProps, setModalProps] = useState<IImageCarouselModal>({
     imgList: [],
     alt: '',
     selectedImg: 0
   });
+
+ const {accommodationId, checkInDate, checkOutDate, people } = getQueryStrData();
 
   const [roomData, setRoomData] = useState<IReservationConfirm>({
     accommodationName: '',
@@ -59,13 +58,11 @@ const AccommodationDetail = () => {
         setRoomData((prev) => ({
           ...prev,
           accommodationName,
-          accommodationId: accommodationId,
           rate,
           people,
           address
         }));
-      })
-      .catch(() => {});
+      });
   }, []);
 
   return (
