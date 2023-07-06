@@ -41,6 +41,11 @@
   border-radius: 50%;
 }
 
+.react-datepicker__navigation-icon--previous::before,
+.react-datepicker__navigation-icon--next::before {
+  top: 0.6rem;
+}
+
 @media screen and (max-width: 640px) {
   .react-datepicker {
     font-size: 11px !important;
@@ -74,5 +79,10 @@
 
   .react-datepicker__navigation-icon--next {
     left: -4px;
+  }
+
+  .react-datepicker__navigation-icon--previous::before,
+  .react-datepicker__navigation-icon--next::before {
+    top: 0.4rem;
   }
 }
