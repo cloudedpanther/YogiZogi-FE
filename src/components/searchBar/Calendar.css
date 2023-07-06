@@ -41,12 +41,12 @@
 
 @media screen and (max-width: 640px) {
   .react-datepicker {
-    font-size: 10px !important;
+    font-size: 11px !important;
     width: min-content !important;
   }
 
   .react-datepicker__current-month {
-    font-size: 10px !important;
+    font-size: 11px !important;
   }
 
   .react-datepicker__header {
