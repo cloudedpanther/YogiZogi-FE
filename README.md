@@ -2,6 +2,7 @@
 <h1 align='center'>숙박시설을 검색하고 예약할 수 있는 숙박 이커머스, <br /> <a href='https://yogizogi.vercel.app/' color='red'>YogiZogi</a>입니다.</h1>
 
 ## ♦️ Contents
+- [Introduce](#introduce)
 - [Feature](#feature)
 - [Tech Stacks](#techStacks)
 - [Crew Info](#crewInfo)
@@ -65,8 +66,6 @@
 |Front-End|Front-End|Front-End|Back-End|Back-End|
 |[Github](https://github.com/cloudedpanther)|[Github](https://github.com/Ryomi-j)|[Github](https://github.com/bbung95)|[Github](https://github.com/wsh096)|[Github](https://github.com/pumkinni)|
 |[Blog](https://blog.naver.com/cloudedpanther)|[Blog](https://premubo.tistory.com/)|[Blog](https://velog.io/@bbung)|[Blog](https://velog.io/@wsh096)|[Blog](https://pumkinni.tistory.com/)|
-
-
 <br/>
 
 
