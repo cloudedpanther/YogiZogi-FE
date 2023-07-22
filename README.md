@@ -24,7 +24,7 @@
 <strong>1. 숙소 검색</strong>
 
 <details>
-  <summary>자세히보기</summary>
+  <summary><p style="color:gray;font-style:italic;">자세히보기</p></summary>
   
 <img alt='logo' src='https://github.com/cloudedpanther/YogiZogi-FE/assets/76900250/2472ccb9-4e7a-41a4-bf65-ec565db7ea0e'>
 
