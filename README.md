@@ -13,9 +13,9 @@
 
 ## 🎉Introduce
 
-숙박 이커머스 요기조기의 프론트엔드 서비스입니다. 본 서비스는 현재 백엔드 서버를 내리고 MSW를 이용해 API와 데이터를 목킹해서 사용하고 있습니다.
+숙박 이커머스 요기조기의 프론트엔드 서비스입니다. 본 서비스는 현재 요금 문제로 백엔드 서버를 내리고 MSW를 이용해 API와 데이터를 목킹해서 사용하고 있습니다.
 
-## Demo Video
+## 🎞 Demo Video
 
 [![yogizogi-demo](http://img.youtube.com/vi/GPzHwhCmJU4/0.jpg)](https://youtu.be/GPzHwhCmJU4)
 
@@ -23,12 +23,138 @@
 
 <strong>1. 숙소 검색</strong>
 
+<details>
+  <summary>자세히보기</summary>
+  
 <img alt='logo' src='https://github.com/cloudedpanther/YogiZogi-FE/assets/76900250/2472ccb9-4e7a-41a4-bf65-ec565db7ea0e'>
 
 - `키워드/현재 위치, 날짜, 인원` 정보를 입력하여 조건에 맞는 숙소를 검색할 수 있습니다.
 - 숙소의 유형(호텔/모텔/펜션), 평점, 가격, 거리로 검색 결과를 필터링 할 수 있습니다.
 - `지도로 보기`를 이용해 숙소의 위치를 확인할 수 있습니다
-- 지도에서 `현 지도에서 검색` 기능을 이용해 지정한 위치의 숙박시설을 확인할 수 있습니다.
+- 검색 결과가 무한 스크롤 방식으로 불러와집니다. 무한 스크롤은 아래와 같이 IntersectionObserver API를 이용해 구현되어 있습니다.
+
+```ts
+// 옵저버 생성/관리를 위한 커스텀 훅
+const useIntersectionObserver = (callback: () => void) => {
+  const observer = useRef(
+    new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            callback();
+          }
+        });
+      },
+      { threshold: 0.3 }
+    )
+  );
+
+  const observe = (element: HTMLDivElement) => {
+    observer.current.observe(element);
+  };
+
+  const unobserve = (element: HTMLDivElement) => {
+    observer.current.unobserve(element);
+  };
+
+  return [observe, unobserve];
+};
+
+// 옵저버 타겟 설정
+const observerTarget = useRef<HTMLDivElement>(null);
+
+// 옵저버 생성
+const [observe, unobserve] = useIntersectionObserver(async () => {
+  setIsLoading(true);
+});
+
+// 옵저버 타겟의 display 설정읋 위한 함수
+const showObserver = useCallback(() => {
+  if (!observerTarget.current) return;
+
+  observerTarget.current.classList.remove('hidden');
+  observerTarget.current.classList.add(
+    'flex',
+    'justify-center',
+    'items-center'
+  );
+}, [observerTarget]);
+
+const hideObserver = useCallback(() => {
+  if (!observerTarget.current) return;
+
+  observerTarget.current.classList.remove(
+    'flex',
+    'justify-center',
+    'items-center'
+  );
+  observerTarget.current.classList.add('hidden');
+}, [observerTarget]);
+
+// 옵저버 구동 설정을 위한 함수
+const startObserving = useCallback(() => {
+  if (observerTarget.current !== null) {
+    showObserver();
+    observe(observerTarget.current);
+  }
+}, [observerTarget]);
+
+const stopObserving = useCallback(() => {
+  if (observerTarget.current !== null) {
+    unobserve(observerTarget.current);
+  }
+}, [observerTarget]);
+
+// 숙소 보기 설정에 따른 옵저버 상태 변경을 위한 함수
+const handleViewToggle = useCallback(() => {
+  setViewType((viewType) => {
+    const nextValue = !viewType;
+    if (!observerTarget.current) {
+      return nextValue;
+    }
+
+    if (nextValue === View.MAP) {
+      stopObserving();
+      hideObserver();
+      return nextValue;
+    }
+
+    if (!isDataEnd && nextValue === View.LIST) {
+      startObserving();
+    }
+
+    return nextValue;
+  });
+}, [viewType]);
+
+// 로딩 상태가 변경될 경우 작동하는 옵저버 상태 변경을 위한 함수
+useEffect(() => {
+  if (observerTarget.current === null) {
+    return;
+  }
+
+  if (isLoading) {
+    stopObserving();
+
+    const loadData = async () => {
+      await handleDetailedSearch();
+      searchParams.current.page++;
+      setIsLoading(false);
+    };
+    loadData();
+    return;
+  }
+
+  if (!isDataEnd && viewType === View.LIST) {
+    startObserving();
+    return;
+  }
+
+  hideObserver();
+}, [isLoading]);
+```
+
+</details>
 
 <strong>4. 숙소 및 객실 비교</strong>
 
