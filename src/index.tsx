@@ -3,14 +3,14 @@ import 'tailwindcss/tailwind.css';
 import { RecoilRoot } from 'recoil';
 import React from 'react';
 import App from './App';
-// import { worker } from './mocks/worker';
+import { worker } from './mocks/worker';
 import KakaoMapScriptLoader from './components/map/KakaoMapScriptLoader';
 import Modal from './components/common/Modal';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
-// if (process.env.NODE_ENV === 'development') {
-//   worker.start();
-// }
+if (process.env.NODE_ENV === 'development') {
+  worker.start();
+}
 
 const container = document.getElementById('root') as HTMLDivElement;
 const root = createRoot(container);
