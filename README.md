@@ -9,16 +9,27 @@
 - [API & Data Mocking](#api--data-mocking)
 - [Tech Stacks](#tech-stacks)
 - [Crew Info](#crew-info)
+- [Deployment](#deployment)
 - [Install & Run](#install--run)
   <br />
 
 ## 🎉Introduce
 
-숙박 이커머스 요기조기의 프론트엔드 서비스입니다. 본 서비스는 현재 요금 문제로 백엔드 서버를 내리고 MSW를 이용해 API와 데이터를 목킹해서 사용하고 있습니다. 이에 카카오 회원가입 및 로그인은 지원하고 있지 않습니다.
+숙박 이커머스 요기조기의 프론트엔드 서비스입니다. 본 서비스는 현재 백엔드 서버를 내리고 MSW를 이용해 API와 데이터를 목킹해서 사용하고 있습니다. 이에 이메일 회원가입과 카카오 회원가입 및 로그인은 지원하고 있지 않습니다.
+
+<br />
+
+\*_본 레포지토리는 개인 포트폴리오를 위해 fork한 것입니다._
+<br />
+Original Repository: https://github.com/YOGIZOGI-Zerobase-2023/FE
+
+<br />
 
 ## 🎞Demo Video
 
 [![yogizogi-demo](http://img.youtube.com/vi/GPzHwhCmJU4/0.jpg)](https://youtu.be/GPzHwhCmJU4)
+
+<br />
 
 ## ✨Feature
 
@@ -170,7 +181,7 @@
 <img alt='kakao-demo' src='https://github.com/cloudedpanther/YogiZogi-FE/assets/76900250/60f7c4ed-dfe0-4f0e-8330-75e9b38b6aff' />
 
 - `ID: test@test.com`, `pw:test1234`로 로그인 가능합니다.
-- 목데이터로 운영 중인 관계로 이메일 회원가입, 카카오 회원가입 및 로그인은 지원하고 있지 않습니다.
+- 목데이터로 운영 중인 관계로 이메일 회원가입과 카카오 회원가입 및 로그인은 지원하고 있지 않습니다.
 
 <strong>5. 숙소 예약</strong>
 
@@ -191,7 +202,8 @@
 <img alt='pwa-demo' src='https://github.com/cloudedpanther/YogiZogi-FE/assets/76900250/7721ab1a-0716-46d1-996e-06eacb65077b)' />
 
 - 요기조기는 사용자 경험을 최적화하기위해 PWA 기능을 추가했습니다. 다운받아 이용할 수 있습니다.
-  <br />
+
+<br />
 
 ## 🛒API & Data Mocking
 
@@ -208,6 +220,7 @@
 ## 🔧Tech Stacks
 
 ![yogizogi_tech_stack drawio (3)](https://github.com/YOGIZOGI-Zerobase-2023/FE/assets/116236689/8705ff4a-5526-4392-8eca-f172810ce776)
+
 <br />
 
 ## 👩‍👧‍👦Crew Info
@@ -219,7 +232,13 @@
 |                                                       [Github](https://github.com/cloudedpanther)                                                       |                                                         [Github](https://github.com/Ryomi-j)                                                         |                                                          [Github](https://github.com/bbung95)                                                           |                                                           [Github](https://github.com/wsh096)                                                           |                                                          [Github](https://github.com/pumkinni)                                                          |
 |                                                      [Blog](https://blog.naver.com/cloudedpanther)                                                      |                                                         [Blog](https://premubo.tistory.com/)                                                         |                                                             [Blog](https://velog.io/@bbung)                                                             |                                                            [Blog](https://velog.io/@wsh096)                                                             |                                                          [Blog](https://pumkinni.tistory.com/)                                                          |
 
-<br/>
+<br />
+
+## 🚀Deployment
+
+YOGIZOGI: https://yogizogi.vercel.app/
+
+<br />
 
 ## 🔨Install & Run
 
