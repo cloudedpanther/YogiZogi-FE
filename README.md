@@ -197,12 +197,12 @@
 
 - 백엔드 API 개발 전 신속한 프론트엔드 개발을 위해 MSW를 도입하여 API 호출을 목킹했습니다.
 - 개발 및 배포 완료 후에는 요금 문제로 백엔드 서버를 내리게 되어 API 및 데이터 목킹을 기반으로 프론트엔드 서버를 운영중입니다.
-- MSW handler 코드는 아래와 같이 구현되어 있습니다.  
-   `ts
-    const handlers = [
+- MSW handler 코드는 아래와 같이 구현되어 있습니다.
+  ```ts
+  const handlers = [
     // MSW handler 코드
-    ];
-    `
+  ];
+  ```
   <br />
 
 ## 🔧Tech Stacks
