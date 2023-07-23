@@ -243,7 +243,7 @@ YOGIZOGI: https://yogizogi.vercel.app/
 ## 🔨 Install & Run
 
 ```bash
-git clone https://github.com/YOGIZOGI-Zerobase-2023/FE.git
+git clone https://github.com/cloudedpanther/YogiZogi-FE.git
 cd FE
 npm i
 npm run dev
