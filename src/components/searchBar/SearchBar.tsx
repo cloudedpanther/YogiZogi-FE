@@ -33,18 +33,8 @@ export const SearchBar = () => {
       : paramLat
       ? '현재 위치에서 찾기'
       : '',
-    checkInDate: paramCheckinDate
-      ? new Date(paramCheckinDate)
-      : new Date() > new Date(2023, 5, 30) &&
-        new Date() <= new Date(2023, 8, 30)
-      ? new Date()
-      : new Date(2023, 6, 1),
-    checkOutDate: paramCheckoutDate
-      ? new Date(paramCheckoutDate)
-      : new Date() > new Date(2023, 5, 30) &&
-        new Date() <= new Date(2023, 8, 30)
-      ? new Date()
-      : new Date(2023, 6, 1),
+    checkInDate: paramCheckinDate ? new Date(paramCheckinDate) : new Date(),
+    checkOutDate: paramCheckoutDate ? new Date(paramCheckoutDate) : new Date(),
     people: paramPeople ? Number(paramPeople) : 0,
     userGeoInfo: [Number(paramLat || 37.57), Number(paramLon || 126.9)]
   });
@@ -58,8 +48,9 @@ export const SearchBar = () => {
 
   useEffect(() => {
     if (
-      search.checkOutDate && search.checkOutDate.toString().slice(0, 15) !==
-      new Date().toString().slice(0, 15)
+      search.checkOutDate &&
+      search.checkOutDate.toString().slice(0, 15) !==
+        new Date().toString().slice(0, 15)
     ) {
       setDateContent(() => {
         const selectedCheckInDate = getMonthDayFormat(search.checkInDate);

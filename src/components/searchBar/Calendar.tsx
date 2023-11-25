@@ -15,7 +15,9 @@ export const Calendar = ({
   calendarState,
   setCalendarState
 }: ICalendar) => {
-  const [startDate, setStartDate] = useState<Date | null>(new Date());
+  const minDate = new Date(new Date().setDate(new Date().getDate() + 1));
+
+  const [startDate, setStartDate] = useState<Date | null>(minDate);
   const [endDate, setEndDate] = useState<Date | null>(null);
 
   const onCalendarChange = (dates: [Date | null, Date | null] | null) => {
@@ -48,8 +50,7 @@ export const Calendar = ({
               locale={ko}
               selected={startDate}
               onChange={onCalendarChange}
-              minDate={new Date(2023, 6, 1)}
-              maxDate={new Date(2023, 9, 1)}
+              minDate={minDate}
               startDate={startDate}
               endDate={endDate}
               selectsRange
