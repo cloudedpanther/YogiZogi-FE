@@ -1,6 +1,16 @@
+import { useEffect } from 'react';
 import { SearchBar } from '../components/searchBar/SearchBar';
+import { accommodationData } from '../mocks/api/data/accommodationData';
+import { createJWTToken } from '../mocks/helps';
 
 const Main = () => {
+  useEffect(() => {
+    // const go = async () => {
+    //   const jwt = await createJWTToken('아이디', '이메일', '닉네임');
+    //   console.log(jwt);
+    // };
+    // go();
+  }, []);
   return (
     <div
       className="bg-no-repeat bg-cover"

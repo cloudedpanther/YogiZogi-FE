@@ -42,6 +42,12 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
 
   // 페이지가 reload 된 후, 기존 비교함에 있던 정보를 localstorage에서 가져와 recoil로 상태관리
   // 오늘 비교함에 담은 데이터가 아닌 경우, localstorage를 비워줌
+  const clearLocalStorageOfComparison = () => {
+    localStorage.removeItem('lastTimeStamp');
+    localStorage.removeItem('selectedRoom');
+    localStorage.removeItem('selectedAccommodation');
+  };
+
   useEffect(() => {
     const lastTimeStamp = localStorage.getItem('lastTimeStamp');
     const selectedRooms = localStorage.getItem('selectedRoom');
@@ -51,13 +57,13 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
       lastTimeStamp &&
       JSON.parse(lastTimeStamp) !== getDateFormat(new Date())
     )
-      localStorage.clear();
+      clearLocalStorageOfComparison();
     else {
       if (
         lastTimeStamp &&
         JSON.parse(lastTimeStamp) !== getDateFormat(new Date())
       )
-        localStorage.clear();
+        clearLocalStorageOfComparison();
       else {
         if (selectedRooms) {
           const parsedData = JSON.parse(selectedRooms);
@@ -88,7 +94,8 @@ export const ComparisonBox = ({ display, source }: IComparisonBox) => {
       const today = getDateFormat(new Date());
       const lastTimeStamp = localStorage.getItem('lastTimeStamp');
 
-      if (lastTimeStamp && lastTimeStamp !== today) localStorage.clear();
+      if (lastTimeStamp && lastTimeStamp !== today)
+        clearLocalStorageOfComparison();
       else {
         localStorage.setItem(
           'lastTimeStamp',

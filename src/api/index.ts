@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { AUTH_TOKEN_KEY } from '../store/atom/authAtom';
 
-export const BASE_URL = 'https://yogizogi.shop/api';
+// export const BASE_URL = 'https://yogizogi.shop/api';
+export const BASE_URL = '/api';
 
 /**
  * 커스텀 axios 인스턴스 생성

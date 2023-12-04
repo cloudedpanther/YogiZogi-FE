@@ -28,7 +28,8 @@ const AccommodationDetail = () => {
     selectedImg: 0
   });
 
- const {accommodationId, checkInDate, checkOutDate, people } = getQueryStrData();
+  const { accommodationId, checkInDate, checkOutDate, people } =
+    getQueryStrData();
 
   const [roomData, setRoomData] = useState<IReservationConfirm>({
     accommodationName: '',

@@ -13,8 +13,8 @@ interface IReview {
 }
 /**
  * @param id accommodation Id(string),
- * @param accommodationData IAccommodationDetailResponse: 
-*/
+ * @param accommodationData IAccommodationDetailResponse:
+ */
 
 export const Review = ({ id, accommodationData }: IReview) => {
   const [page, setPage] = useState(0);
@@ -76,7 +76,7 @@ export const Review = ({ id, accommodationData }: IReview) => {
             <div className="flex items-center text-xl md:text-3xl text-center">
               <div className="my-5 w-1/3 p-2">
                 <span className="font-semibold text-red-500">
-                  {accommodationData && (accommodationData.rate).toFixed(1)}
+                  {accommodationData && accommodationData.rate.toFixed(1)}
                 </span>{' '}
                 / 10 점
               </div>

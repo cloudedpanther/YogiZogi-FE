@@ -22,6 +22,8 @@ const useAuth = () => {
    * authState 초기화
    */
   const handleLogout = () => {
+    sessionStorage.removeItem('loggedInUser');
+
     sessionStorage.removeItem(AUTH_TOKEN_KEY);
     localStorage.removeItem(AUTH_TOKEN_KEY);
     setAuthUser({ user: {}, isLoggedIn: false, token: '' });

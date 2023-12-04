@@ -10,18 +10,21 @@ interface UserProps {
 }
 interface AuthUserProps {
   user: UserProps;
-  token: string;
+  token: string | null;
   isLoggedIn: boolean;
   expiration?: boolean;
 }
 
 const initialize: AuthUserProps = {
   user: {},
-  token: String(
-    localStorage.getItem(AUTH_TOKEN_KEY)
-      ? localStorage.getItem(AUTH_TOKEN_KEY)
-      : sessionStorage.getItem(AUTH_TOKEN_KEY)
-  ),
+  token:
+    localStorage.getItem(AUTH_TOKEN_KEY) ||
+    sessionStorage.getItem(AUTH_TOKEN_KEY)
+      ? String(
+          localStorage.getItem(AUTH_TOKEN_KEY) ||
+            sessionStorage.getItem(AUTH_TOKEN_KEY)
+        )
+      : null,
   isLoggedIn:
     localStorage.getItem(AUTH_TOKEN_KEY) ||
     sessionStorage.getItem(AUTH_TOKEN_KEY)
