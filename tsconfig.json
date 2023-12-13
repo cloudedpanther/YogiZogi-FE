@@ -1,28 +1,21 @@
 {
   "compilerOptions": {
-    "baseUrl": "./src",
-    "target": "esnext",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "allowJs": false,
     "skipLibCheck": true,
-    "esModuleInterop": true,
+    "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
     "strict": true,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
     "forceConsistentCasingInFileNames": true,
-    "module": "esnext",
-    "moduleResolution": "node",
+    "module": "ESNext",
+    "moduleResolution": "Node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
-    "types": ["react", "react-dom", "kakao.maps.d.ts", "jest"],
-    "typeRoots": ["./node_modules", "./node_modules/@types", "./@types"],
-    "paths": {
-      "react-router-dom": ["node_modules/react-router-dom"]
-    }
+    "jsx": "react-jsx"
   },
-  "include": ["src", "jest.setup.js"],
-  "exclude": ["node_modules"]
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

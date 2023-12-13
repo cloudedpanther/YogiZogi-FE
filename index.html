@@ -1,56 +1,13 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="yogizogi-capable" content="yes" />
-    <meta name="yogizogi-status-bar-style" content="black-translucent" />
-    <meta name="theme-color" content="#FFFFF" />
-    <meta name="yogizogi-title" content="YogiZogi" />
-
-    <link rel="apple-touch-icon" sizes="72x72" href="/assets/logos/72.png" />
-    <link rel="apple-touch-icon" sizes="96x96" href="/assets/logos/96.png" />
-    <link rel="apple-touch-icon" sizes="120x120" href="/assets/logos/120.png" />
-    <link rel="apple-touch-icon" sizes="144x144" href="/assets/logos/144.png" />
-    <link rel="apple-touch-icon" sizes="152x152" href="/assets/logos/152.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/logos/180.png" />
-    <link rel="apple-touch-icon" sizes="192x192" href="/assets/logos/192.png" />
-    <link rel="apple-touch-icon" sizes="512x512" href="/assets/logos/512.png" />
-    <link
-      rel="apple-touch-icon"
-      sizes="1024x1024"
-      href="/assets/logos/1024.png"
-    />
-    <link rel="manifest" href="manifest.json" />
-    <link rel="icon" href="/assets/logos/16.png" />
-    <title>YogiZogi</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/index.tsx"></script>
-    <!-- <script>
-      (() => {
-        const redirect = sessionStorage.redirect;
-        delete sessionStorage.redirect;
-        if (redirect && redirect !== location.href) {
-          history.replaceState(null, null, redirect);
-        }
-      })();
-
-      if ('serviceWorker' in navigator) {
-        // Register a service worker hosted at the root of the
-        // site using the default scope.
-        navigator.serviceWorker
-          .register('/sw.js')
-          .then((registration) => {
-            console.log('Service worker registration succeeded:', registration);
-          })
-          .catch((err) => {
-            console.log('Service worker registration failed:', error);
-          });
-      } else {
-        console.log('Service workers are not supported.');
-      }
-    </script> -->
-  </body>
+    <head>
+        <meta charset="UTF-8" />
+        <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Yogizogi</title>
+    </head>
+    <body>
+        <div id="root"></div>
+        <script type="module" src="/src/main.tsx"></script>
+    </body>
 </html>
