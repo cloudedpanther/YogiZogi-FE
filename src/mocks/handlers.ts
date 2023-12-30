@@ -210,7 +210,6 @@ export const handlers = [
       })
       .filter((data) => {
         if (!maxprice) return true;
-
         if (data.price) return data.price <= Number(maxprice);
       })
       .filter((data) => {

@@ -1,6 +1,7 @@
 import { fetchData } from '.';
 
 export interface ISearchParams {
+  [key: string]: string | undefined;
   keyword: string;
   checkindate: string;
   checkoutdate: string;
@@ -9,10 +10,10 @@ export interface ISearchParams {
   lon: string;
   sort: string;
   direction: string;
-  minprice: string | null;
-  maxprice: string | null;
-  category: number;
-  page: number;
+  minprice?: string;
+  maxprice?: string;
+  category: string;
+  page: string;
 }
 
 interface IStaticSearchParams {
@@ -27,10 +28,10 @@ interface IStaticSearchParams {
 }
 
 interface IDynamicSearchParams {
-  readonly minprice: string | null;
-  readonly maxprice: string | null;
-  readonly category: number;
-  readonly page: number;
+  readonly minprice?: string;
+  readonly maxprice?: string;
+  readonly category: string;
+  readonly page: string;
 }
 
 export interface ISearchResultContent {
@@ -124,21 +125,24 @@ const getDynamicQueryString = ({
   const params = [
     {
       name: 'minprice',
-      value: maxprice && !minprice ? 0 : minprice
+      value: maxprice !== undefined && minprice === undefined ? 0 : minprice
     },
     {
       name: 'maxprice',
-      value: minprice && !maxprice ? INFINITE_PRICE : maxprice
+      value:
+        minprice !== undefined && maxprice === undefined
+          ? INFINITE_PRICE
+          : maxprice
     },
     {
       name: 'category',
-      value: category === 0 ? null : category
+      value: category === '0' ? undefined : category
     }
   ];
 
   const queryString = params
     .map((param) =>
-      param.value === null ? '' : `&${param.name}=${param.value}`
+      param.value === undefined ? '' : `&${param.name}=${param.value}`
     )
     .join('');
 

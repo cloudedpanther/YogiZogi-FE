@@ -5,6 +5,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { AlertModal } from '../../components/common/AlertModal';
 import { Calendar } from './Calendar';
 import { useClickOutside } from '../../hooks/useClickOutside';
+import {
+  DEFAULT_LAT,
+  DEFAULT_LON
+} from '../../components/searchResult/constants';
 
 export interface SearchProps {
   searchValue: string;
@@ -90,11 +94,19 @@ export const SearchBar = () => {
       params.append('people', search.people.toString());
 
       if (search.searchValue === '현재 위치에서 찾기') {
+        params.append('keyword', '');
         params.append('lat', lat.toString());
         params.append('lon', lon.toString());
       } else {
         params.append('keyword', search.searchValue);
+        params.append('lat', DEFAULT_LAT);
+        params.append('lon', DEFAULT_LON);
       }
+
+      params.append('sort', 'rate');
+      params.append('direction', 'desc');
+      params.append('category', '0');
+      params.append('page', '0');
 
       const isInSearchResult = location.pathname.includes('searchResult');
 
