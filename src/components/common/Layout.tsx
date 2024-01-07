@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import Footer from './Footer';
 import Nav from './Nav';
 import { Location, useLocation } from 'react-router-dom';
