@@ -8,6 +8,10 @@ import AccommodationPreview from '../components/searchResult/AccommodationPrevie
 import { FloatingIcon } from '../components/floatingIcons/FloatingIcon';
 import MapView from '../components/map/MapView';
 import useDetailedSearchParams from '../hooks/useDetailedSearchParams';
+import { useRecoilState } from 'recoil';
+import { selectedAccommodation } from 'store/atom/comparisonAtom';
+import { useEffect, useState } from 'react';
+import { AlertModal } from 'components/common/AlertModal';
 
 const SearchResult = () => {
   const [isMapView, onViewToggle] = useMapView();
@@ -20,6 +24,17 @@ const SearchResult = () => {
     observerTarget
   } = useDetailedSearch();
   const [searchParams] = useDetailedSearchParams();
+
+  const [selectedAcc, setSelectedAcc] = useRecoilState(selectedAccommodation);
+  const [modalState, setModalState] = useState(false);
+
+  // 비교함에 상품이 3개 이상일때, 초기 3개의 상품만 반환
+  useEffect(() => {
+    if (selectedAcc.length > 3) {
+      setSelectedAcc(selectedAcc.slice(0, 3));
+      setModalState(true);
+    }
+  }, [selectedAcc]);
 
   return (
     <div
@@ -136,11 +151,11 @@ const SearchResult = () => {
           <FloatingIcon />
 
           {/* 모달 */}
-          {/* <AlertModal
-        content="최대 3개의 상품만 담을 수 있습니다."
-        modalState={modalState}
-        handleModal={setModalState}
-      /> */}
+          <AlertModal
+            content="최대 3개의 상품만 담을 수 있습니다."
+            modalState={modalState}
+            handleModal={setModalState}
+          />
         </>
       )}
     </div>
