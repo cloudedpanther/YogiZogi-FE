@@ -112,8 +112,8 @@ const useDetailedSearch = () => {
     if (!isCallbackRunning) return;
 
     // observer intersecting... =>
-    goToNextPage();
     setIsCallbackRunning(false);
+    goToNextPage();
     // search params set... => start loading
   }, [isCallbackRunning]);
 

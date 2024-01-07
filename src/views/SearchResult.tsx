@@ -28,7 +28,6 @@ const SearchResult = () => {
   const [selectedAcc, setSelectedAcc] = useRecoilState(selectedAccommodation);
   const [modalState, setModalState] = useState(false);
 
-  // 비교함에 상품이 3개 이상일때, 초기 3개의 상품만 반환
   useEffect(() => {
     if (selectedAcc.length > 3) {
       setSelectedAcc(selectedAcc.slice(0, 3));

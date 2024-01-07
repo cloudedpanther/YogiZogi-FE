@@ -15,7 +15,7 @@
 
 ## 🎉 Introduce
 
-숙박 이커머스 요기조기의 프론트엔드 서비스입니다. 본 서비스는 현재 백엔드 서버를 내리고 MSW를 이용해 API와 데이터를 목킹해서 사용하고 있습니다. 이에 이메일 회원가입과 카카오 회원가입 및 로그인은 지원하고 있지 않습니다.
+숙박 이커머스 요기조기의 프론트엔드 서비스입니다. 본 서비스는 현재 백엔드 서버를 내리고 MSW를 이용해 API와 데이터를 목킹해서 사용하고 있습니다.
 
 <br />
 
@@ -43,124 +43,85 @@ Original Repository: https://github.com/YOGIZOGI-Zerobase-2023/FE
 - 검색 결과가 무한 스크롤 방식으로 불러와집니다. 무한 스크롤은 아래와 같이 IntersectionObserver API를 이용해 구현되어 있습니다.
 
   ```ts
-  // 옵저버 생성/관리를 위한 커스텀 훅
-  const useIntersectionObserver = (callback: () => void) => {
+  // observer를 활용하기 위한 custom hook
+  export const useIntersectionObserver = (callback: () => void) => {
     const observer = useRef(
       new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              callback();
-            }
+            if (!entry.isIntersecting) return;
+            unobserve();
+            callback();
           });
         },
         { threshold: 0.3 }
       )
     );
 
-    const observe = (element: HTMLDivElement) => {
-      observer.current.observe(element);
-    };
+    const target = useRef<HTMLDivElement>(null);
 
-    const unobserve = (element: HTMLDivElement) => {
-      observer.current.unobserve(element);
-    };
+    const observe = useCallback(() => {
+      if (!target.current) return;
+      observer.current.observe(target.current);
+    }, []);
 
-    return [observe, unobserve];
+    const unobserve = useCallback(() => {
+      if (!target.current) return;
+
+      observer.current.unobserve(target.current);
+    }, []);
+
+    const showTarget = useCallback(() => {
+      if (!target.current) return;
+
+      target.current.classList.remove('hidden');
+      target.current.classList.add('flex', 'justify-center', 'items-center');
+    }, []);
+
+    const hideTarget = useCallback(() => {
+      if (!target.current) return;
+
+      target.current.classList.remove('flex', 'justify-center', 'items-center');
+      target.current.classList.add('hidden');
+    }, []);
+
+    return { observe, unobserve, target, showTarget, hideTarget };
   };
 
-  // 옵저버 타겟 설정
-  const observerTarget = useRef<HTMLDivElement>(null);
-
-  // 옵저버 생성
-  const [observe, unobserve] = useIntersectionObserver(async () => {
-    setIsLoading(true);
-  });
-
-  // 옵저버 타겟의 display 설정읋 위한 함수
-  const showObserver = useCallback(() => {
-    if (!observerTarget.current) return;
-
-    observerTarget.current.classList.remove('hidden');
-    observerTarget.current.classList.add(
-      'flex',
-      'justify-center',
-      'items-center'
-    );
-  }, [observerTarget]);
-
-  const hideObserver = useCallback(() => {
-    if (!observerTarget.current) return;
-
-    observerTarget.current.classList.remove(
-      'flex',
-      'justify-center',
-      'items-center'
-    );
-    observerTarget.current.classList.add('hidden');
-  }, [observerTarget]);
-
-  // 옵저버 구동 설정을 위한 함수
-  const startObserving = useCallback(() => {
-    if (observerTarget.current !== null) {
-      showObserver();
-      observe(observerTarget.current);
+  // hook 사용
+  // callback이 setState를 다뤄야 하기 때문에 고정된 상태로 넘겨줘야 할 수가 없음
+  // callback을 바로 작성하지 않고 state를 둔 후 해당 state가 true일때 작동하는 effect를 운영
+  const [isCallbackRunning, setIsCallbackRunning] = useState(false);
+  const { observe, target, showTarget, hideTarget } = useIntersectionObserver(
+    () => {
+      setIsCallbackRunning(true);
     }
-  }, [observerTarget]);
+  );
 
-  const stopObserving = useCallback(() => {
-    if (observerTarget.current !== null) {
-      unobserve(observerTarget.current);
-    }
-  }, [observerTarget]);
-
-  // 숙소 보기 설정에 따른 옵저버 상태 변경을 위한 함수
-  const handleViewToggle = useCallback(() => {
-    setViewType((viewType) => {
-      const nextValue = !viewType;
-      if (!observerTarget.current) {
-        return nextValue;
-      }
-
-      if (nextValue === View.MAP) {
-        stopObserving();
-        hideObserver();
-        return nextValue;
-      }
-
-      if (!isDataEnd && nextValue === View.LIST) {
-        startObserving();
-      }
-
-      return nextValue;
-    });
-  }, [viewType]);
-
-  // 로딩 상태가 변경될 경우 작동하는 옵저버 상태 변경을 위한 함수
+  // 데이터를 로드해오고 나면 다음 페이지를 위한 observing 시작
   useEffect(() => {
-    if (observerTarget.current === null) {
+    if (isLoading) return;
+    // => loading done
+
+    // 모든 데이터를 받아왔을 경우 새로 API 호출하지 않고 observer target 숨김
+    if (accommodationList.length === totalElements) {
+      hideTarget();
       return;
     }
 
-    if (isLoading) {
-      stopObserving();
-
-      const loadData = async () => {
-        await handleDetailedSearch();
-        searchParams.current.page++;
-        setIsLoading(false);
-      };
-      loadData();
-      return;
-    }
-
-    if (!isDataEnd && viewType === View.LIST) {
-      startObserving();
-      return;
-    }
-
-    hideObserver();
+    observe();
+    // observer ready
   }, [isLoading]);
+
+  // callback을 대신하는 effect --> 실제 내용은 goToNextPage()에
+  useEffect(() => {
+    if (!isCallbackRunning) return;
+
+    // observer intersecting... =>
+    setIsCallbackRunning(false);
+    goToNextPage();
+    // search params set... => start loading
+  }, [isCallbackRunning]);
   ```
 
 <strong>2. 숙소 정보 열람</strong>
@@ -181,7 +142,6 @@ Original Repository: https://github.com/YOGIZOGI-Zerobase-2023/FE
 <img alt='kakao-demo' src='https://github.com/cloudedpanther/YogiZogi-FE/assets/76900250/60f7c4ed-dfe0-4f0e-8330-75e9b38b6aff' />
 
 - `ID: test@test.com`, `pw:test1234`로 로그인 가능합니다.
-- 목데이터로 운영 중인 관계로 이메일 회원가입과 카카오 회원가입 및 로그인은 지원하고 있지 않습니다.
 
 <strong>5. 숙소 예약</strong>
 
@@ -197,24 +157,13 @@ Original Repository: https://github.com/YOGIZOGI-Zerobase-2023/FE
 - 예약 내역은 기간별로 필터링 할 수 있습니다.
 - 숙소에 대한 리뷰와 함께 `서비스/가격/시설`에 대한 별점을 남길 수 있습니다.
 
-<strong>7. PWA</strong>
-
-<img alt='pwa-demo' src='https://github.com/cloudedpanther/YogiZogi-FE/assets/76900250/7721ab1a-0716-46d1-996e-06eacb65077b)' />
-
-- 요기조기는 사용자 경험을 최적화하기위해 PWA 기능을 추가했습니다. 다운받아 이용할 수 있습니다.
-
 <br />
 
 ## 🛒 API & Data Mocking
 
 - 백엔드 API 개발 전 신속한 프론트엔드 개발을 위해 MSW를 도입하여 API 호출을 목킹했습니다.
+- REST API를 바탕으로 호출에 대응하고 있습니다.
 - 개발 및 배포 완료 후에는 요금 문제로 백엔드 서버를 내리게 되어 API 및 데이터 목킹을 기반으로 프론트엔드 서버를 운영중입니다.
-- MSW handler 코드는 아래와 같이 구현되어 있습니다.
-  ```ts
-  const handlers = [
-    // MSW handler 코드
-  ];
-  ```
   <br />
 
 ## 🔧 Tech Stacks

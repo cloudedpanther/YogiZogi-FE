@@ -5,9 +5,6 @@ export const useIntersectionObserver = (callback: () => void) => {
     new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          console.log('ratio: ', entry.intersectionRatio);
-          console.log('intersecting?: ', entry.isIntersecting);
-
           if (!entry.isIntersecting) return;
           unobserve();
           callback();
