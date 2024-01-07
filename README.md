@@ -185,7 +185,7 @@ Original Repository: https://github.com/YOGIZOGI-Zerobase-2023/FE
 
 ## 🚀 Deployment
 
-YOGIZOGI: https://yogizogi.vercel.app/
+YOGIZOGI: https://yogi-zogi-fe.vercel.app
 
 <br />
 
