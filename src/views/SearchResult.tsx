@@ -8,10 +8,10 @@ import AccommodationPreview from '../components/searchResult/AccommodationPrevie
 import { FloatingIcon } from '../components/floatingIcons/FloatingIcon';
 import MapView from '../components/map/MapView';
 import useDetailedSearchParams from '../hooks/useDetailedSearchParams';
+import { selectedAccommodation } from '../store/atom/comparisonAtom';
+import { AlertModal } from '../components/common/AlertModal';
 import { useRecoilState } from 'recoil';
-import { selectedAccommodation } from 'store/atom/comparisonAtom';
 import { useEffect, useState } from 'react';
-import { AlertModal } from 'components/common/AlertModal';
 
 const SearchResult = () => {
   const [isMapView, onViewToggle] = useMapView();
