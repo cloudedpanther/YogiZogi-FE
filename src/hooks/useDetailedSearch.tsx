@@ -53,6 +53,13 @@ const useDetailedSearch = () => {
     setIsLoading(false);
   }, [searchParams]);
 
+  const [isCallbackRunning, setIsCallbackRunning] = useState(false);
+
+  const { observe, unobserve, target, showTarget, hideTarget } =
+    useIntersectionObserver(() => {
+      setIsCallbackRunning(true);
+    });
+
   const onSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -61,18 +68,11 @@ const useDetailedSearch = () => {
 
     setSearchParams(formData, 0);
 
+    unobserve();
     setTotalElements(0);
     setAccommodationList([]);
     showTarget();
   }, []);
-
-  const [isCallbackRunning, setIsCallbackRunning] = useState(false);
-
-  const { observe, target, showTarget, hideTarget } = useIntersectionObserver(
-    () => {
-      setIsCallbackRunning(true);
-    }
-  );
 
   const goToNextPage = useCallback(() => {
     if (!formRef.current) return;
