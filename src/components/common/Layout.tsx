@@ -1,12 +1,30 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Footer from './Footer';
 import Nav from './Nav';
-import { useLocation } from 'react-router-dom';
+import { Location, useLocation } from 'react-router-dom';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
+  const history = useRef<Location[]>([]);
   const location = useLocation();
 
   useEffect(() => {
+    if (!history.current.length) {
+      history.current.push(location);
+      return;
+    }
+
+    const prev = [...history.current];
+    const last = prev[prev.length - 1];
+
+    history.current = [...prev, location];
+
+    if (last.pathname === location.pathname) return;
+    if (
+      last.pathname.includes('accommodation') &&
+      location.pathname.includes('searchResult')
+    )
+      return;
+
     scrollTo(0, 0);
   }, [location]);
 
